@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  tammy:
+    build: .
+    container_name: tammy-assistant
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=sqlite+aiosqlite:///./tammy.db
+      - SECRET_KEY=${SECRET_KEY:-change-this-secret-key}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+    restart: unless-stopped
+
+  # Optional: PostgreSQL database for production
+  # postgres:
+  #   image: postgres:15-alpine
+  #   container_name: tammy-db
+  #   environment:
+  #     - POSTGRES_USER=tammy
+  #     - POSTGRES_PASSWORD=${DB_PASSWORD}
+  #     - POSTGRES_DB=tammy
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+  #   ports:
+  #     - "5432:5432"
+
+# volumes:
+#   postgres_data:
