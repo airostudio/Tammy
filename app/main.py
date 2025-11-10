@@ -2,8 +2,11 @@
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from contextlib import asynccontextmanager
 import logging
+import os
 
 from app.config import get_settings
 from app.database import init_db, close_db
@@ -50,20 +53,33 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Mount static files
+static_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "static")
+public_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "public")
+
+if os.path.exists(static_dir):
+    app.mount("/static", StaticFiles(directory=static_dir), name="static")
+
 # Include API routes
 app.include_router(api_router, prefix="/api")
 
 
 @app.get("/")
 async def root():
-    """Root endpoint"""
-    return {
-        "message": "Welcome to Tammy AI Assistant!",
-        "version": settings.app_version,
-        "status": "running",
-        "docs": "/docs",
-        "api": "/api",
-    }
+    """Serve the web interface"""
+    index_path = os.path.join(public_dir, "index.html")
+    if os.path.exists(index_path):
+        return FileResponse(index_path)
+    else:
+        # Fallback to JSON response
+        return {
+            "message": "Welcome to Tammy AI Assistant!",
+            "version": settings.app_version,
+            "status": "running",
+            "docs": "/docs",
+            "api": "/api",
+            "web_interface": "Install frontend files to see the web interface"
+        }
 
 
 @app.get("/health")
