@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from contextlib import asynccontextmanager
+from datetime import datetime, timezone
 import logging
 import os
 
@@ -12,14 +13,26 @@ from app.config import get_settings
 from app.database import init_db, close_db
 from app.api import api_router
 
+settings = get_settings()
+
 # Configure logging
+log_handlers = [logging.StreamHandler()]
+if settings.log_file:
+    try:
+        log_dir = os.path.dirname(settings.log_file)
+        if log_dir:
+            os.makedirs(log_dir, exist_ok=True)
+        log_handlers.append(logging.FileHandler(settings.log_file))
+    except OSError:
+        # Read-only filesystem (e.g. serverless deployments) - fall back to stream logging only
+        pass
+
 logging.basicConfig(
-    level=logging.INFO,
+    level=getattr(logging, settings.log_level.upper(), logging.INFO),
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    handlers=log_handlers,
 )
 logger = logging.getLogger(__name__)
-
-settings = get_settings()
 
 
 @asynccontextmanager
@@ -88,7 +101,7 @@ async def health_check():
     return {
         "status": "healthy",
         "version": settings.app_version,
-        "timestamp": "2025-11-09",
+        "timestamp": datetime.now(timezone.utc).isoformat(),
     }
 
 

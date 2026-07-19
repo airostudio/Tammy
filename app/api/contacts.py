@@ -17,15 +17,6 @@ async def create_contact(contact: ContactCreate, db: AsyncSession = Depends(get_
     return await ContactService.create_contact(db, contact)
 
 
-@router.get("/{contact_id}", response_model=ContactResponse)
-async def get_contact(contact_id: str, db: AsyncSession = Depends(get_db)):
-    """Get a contact by ID"""
-    contact = await ContactService.get_contact(db, contact_id)
-    if not contact:
-        raise HTTPException(status_code=404, detail="Contact not found")
-    return contact
-
-
 @router.get("/", response_model=List[ContactResponse])
 async def get_contacts(user_id: str, db: AsyncSession = Depends(get_db)):
     """Get all contacts for a user"""
@@ -36,6 +27,15 @@ async def get_contacts(user_id: str, db: AsyncSession = Depends(get_db)):
 async def search_contacts(user_id: str, query: str, db: AsyncSession = Depends(get_db)):
     """Search contacts"""
     return await ContactService.search_contacts(db, user_id, query)
+
+
+@router.get("/{contact_id}", response_model=ContactResponse)
+async def get_contact(contact_id: str, db: AsyncSession = Depends(get_db)):
+    """Get a contact by ID"""
+    contact = await ContactService.get_contact(db, contact_id)
+    if not contact:
+        raise HTTPException(status_code=404, detail="Contact not found")
+    return contact
 
 
 @router.put("/{contact_id}", response_model=ContactResponse)

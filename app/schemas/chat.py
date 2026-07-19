@@ -1,6 +1,6 @@
 """Chat schemas for AI conversation"""
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import Optional, Dict, Any, List
 from datetime import datetime
 
@@ -23,7 +23,7 @@ class ChatResponse(BaseModel):
     actions: Optional[List[Dict[str, Any]]] = None
     confidence: Optional[float] = None
     suggestions: Optional[List[str]] = None
-    timestamp: datetime = datetime.utcnow()
+    timestamp: datetime = Field(default_factory=datetime.utcnow)
 
     class Config:
         from_attributes = True

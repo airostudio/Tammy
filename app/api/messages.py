@@ -17,15 +17,6 @@ async def create_message(message: MessageCreate, db: AsyncSession = Depends(get_
     return await MessageService.create_message(db, message)
 
 
-@router.get("/{message_id}", response_model=MessageResponse)
-async def get_message(message_id: str, db: AsyncSession = Depends(get_db)):
-    """Get a message by ID (marks as read)"""
-    message = await MessageService.get_message(db, message_id)
-    if not message:
-        raise HTTPException(status_code=404, detail="Message not found")
-    return message
-
-
 @router.get("/", response_model=List[MessageResponse])
 async def get_messages(
     message_type: Optional[str] = None,
@@ -35,6 +26,33 @@ async def get_messages(
 ):
     """Get messages with optional filtering"""
     return await MessageService.get_messages(db, message_type, status, direction)
+
+
+@router.get("/unread/all", response_model=List[MessageResponse])
+async def get_unread_messages(db: AsyncSession = Depends(get_db)):
+    """Get all unread messages"""
+    return await MessageService.get_unread_messages(db)
+
+
+@router.get("/flagged/all", response_model=List[MessageResponse])
+async def get_flagged_messages(db: AsyncSession = Depends(get_db)):
+    """Get all flagged messages"""
+    return await MessageService.get_flagged_messages(db)
+
+
+@router.get("/search/", response_model=List[MessageResponse])
+async def search_messages(query: str, db: AsyncSession = Depends(get_db)):
+    """Search messages"""
+    return await MessageService.search_messages(db, query)
+
+
+@router.get("/{message_id}", response_model=MessageResponse)
+async def get_message(message_id: str, db: AsyncSession = Depends(get_db)):
+    """Get a message by ID (marks as read)"""
+    message = await MessageService.get_message(db, message_id)
+    if not message:
+        raise HTTPException(status_code=404, detail="Message not found")
+    return message
 
 
 @router.put("/{message_id}", response_model=MessageResponse)
@@ -54,24 +72,6 @@ async def delete_message(message_id: str, db: AsyncSession = Depends(get_db)):
     success = await MessageService.delete_message(db, message_id)
     if not success:
         raise HTTPException(status_code=404, detail="Message not found")
-
-
-@router.get("/unread/all", response_model=List[MessageResponse])
-async def get_unread_messages(db: AsyncSession = Depends(get_db)):
-    """Get all unread messages"""
-    return await MessageService.get_unread_messages(db)
-
-
-@router.get("/flagged/all", response_model=List[MessageResponse])
-async def get_flagged_messages(db: AsyncSession = Depends(get_db)):
-    """Get all flagged messages"""
-    return await MessageService.get_flagged_messages(db)
-
-
-@router.get("/search/", response_model=List[MessageResponse])
-async def search_messages(query: str, db: AsyncSession = Depends(get_db)):
-    """Search messages"""
-    return await MessageService.search_messages(db, query)
 
 
 @router.post("/{message_id}/read", response_model=MessageResponse)
