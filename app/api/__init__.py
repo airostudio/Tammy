@@ -1,7 +1,7 @@
 """API routes"""
 
 from fastapi import APIRouter
-from app.api import appointments, contacts, tasks, visitors, messages, chat
+from app.api import appointments, contacts, tasks, visitors, messages, chat, telephony
 
 api_router = APIRouter()
 
@@ -12,3 +12,4 @@ api_router.include_router(tasks.router, prefix="/tasks", tags=["tasks"])
 api_router.include_router(visitors.router, prefix="/visitors", tags=["visitors"])
 api_router.include_router(messages.router, prefix="/messages", tags=["messages"])
 api_router.include_router(chat.router, prefix="/chat", tags=["chat"])
+api_router.include_router(telephony.router, prefix="/telephony", tags=["telephony"])

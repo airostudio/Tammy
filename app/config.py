@@ -38,6 +38,18 @@ class Settings(BaseSettings):
     twilio_auth_token: str = ""
     twilio_phone_number: str = ""
 
+    # Telnyx (optional)
+    telnyx_api_key: str = ""
+    telnyx_public_key: str = ""
+    telnyx_phone_number: str = ""
+
+    # Telephony
+    telephony_provider: str = "telnyx"
+    # Public HTTPS base URL this app is reachable at, used to reconstruct the
+    # exact webhook URL for signature verification when behind a proxy/load
+    # balancer. Falls back to the incoming request's own base URL if unset.
+    public_base_url: str = ""
+
     # Rate Limiting
     rate_limit_per_minute: int = 60
 
