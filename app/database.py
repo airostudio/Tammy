@@ -6,11 +6,22 @@ from app.config import get_settings
 
 settings = get_settings()
 
+_connect_args = {}
+if "+asyncpg" in settings.database_url:
+    # Supabase's connection pooler (and pgbouncer transaction pooling in
+    # general) doesn't support asyncpg's server-side prepared statement
+    # cache - leaving it on causes intermittent "prepared statement ...
+    # already exists" errors under concurrent serverless invocations.
+    # Safe to disable unconditionally; it also suits short-lived
+    # serverless connections that gain little from statement caching.
+    _connect_args["statement_cache_size"] = 0
+
 # Create async engine
 engine = create_async_engine(
     settings.database_url,
     echo=settings.debug,
-    future=True
+    future=True,
+    connect_args=_connect_args,
 )
 
 # Create async session factory

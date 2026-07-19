@@ -82,4 +82,16 @@ def get_settings() -> Settings:
         if not path.startswith("/"):
             settings.database_url = "sqlite+aiosqlite:////tmp/tammy.db"
 
+    # Hosted Postgres providers (Supabase, Neon, Railway, Heroku...) hand
+    # out plain "postgresql://" or legacy "postgres://" URLs. SQLAlchemy's
+    # async engine needs an explicit async driver in the scheme, or engine
+    # creation fails outright (defaults to the sync psycopg2 driver, which
+    # isn't installed and isn't async-compatible anyway).
+    if settings.database_url.startswith("postgres://"):
+        settings.database_url = settings.database_url.replace("postgres://", "postgresql+asyncpg://", 1)
+    elif settings.database_url.startswith("postgresql://"):
+        settings.database_url = settings.database_url.replace(
+            "postgresql://", "postgresql+asyncpg://", 1
+        )
+
     return settings
