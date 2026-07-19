@@ -40,12 +40,21 @@ async def lifespan(app: FastAPI):
     """Application lifespan manager"""
     # Startup
     logger.info("Starting Tammy AI Assistant...")
-    await init_db()
-    logger.info("Database initialized")
+    try:
+        await init_db()
+        logger.info("Database initialized")
+    except Exception:
+        # A broken/unwritable DATABASE_URL shouldn't take down the whole
+        # app - degrade to DB-backed endpoints failing individually rather
+        # than every request 500ing on startup.
+        logger.exception("Database initialization failed - continuing without a working database")
     yield
     # Shutdown
     logger.info("Shutting down Tammy AI Assistant...")
-    await close_db()
+    try:
+        await close_db()
+    except Exception:
+        logger.exception("Error closing database connections")
     logger.info("Database connections closed")
 
 

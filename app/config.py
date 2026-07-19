@@ -1,5 +1,6 @@
 """Application configuration"""
 
+import os
 from pydantic_settings import BaseSettings
 from functools import lru_cache
 
@@ -68,4 +69,17 @@ class Settings(BaseSettings):
 @lru_cache()
 def get_settings() -> Settings:
     """Get cached settings instance"""
-    return Settings()
+    settings = Settings()
+
+    if os.getenv("VERCEL") and settings.database_url.startswith("sqlite"):
+        # Vercel's serverless filesystem is read-only outside /tmp - a
+        # relative-path sqlite file (the local-dev default) would crash the
+        # function on write. Redirect to /tmp so the app can boot; this is
+        # still ephemeral per-invocation, so anything that needs to persist
+        # across requests needs a real DATABASE_URL (e.g. Postgres) set in
+        # the Vercel project's environment variables.
+        path = settings.database_url.split(":///", 1)[-1] if ":///" in settings.database_url else ""
+        if not path.startswith("/"):
+            settings.database_url = "sqlite+aiosqlite:////tmp/tammy.db"
+
+    return settings
