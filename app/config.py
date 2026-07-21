@@ -52,8 +52,21 @@ class Settings(BaseSettings):
     telephony_provider: str = "telnyx"
     # Public HTTPS base URL this app is reachable at, used to reconstruct the
     # exact webhook URL for signature verification when behind a proxy/load
-    # balancer. Falls back to the incoming request's own base URL if unset.
+    # balancer, and as the OAuth redirect_uri base for calendar sync. Falls
+    # back to the incoming request's own base URL if unset.
     public_base_url: str = ""
+
+    # Google Calendar OAuth (optional) - from a Google Cloud OAuth 2.0
+    # Client (console.cloud.google.com/apis/credentials) with the Calendar
+    # API enabled.
+    google_client_id: str = ""
+    google_client_secret: str = ""
+
+    # Microsoft 365/Outlook OAuth (optional) - from an Azure AD app
+    # registration (portal.azure.com) with Microsoft Graph's
+    # Calendars.ReadWrite delegated permission.
+    microsoft_client_id: str = ""
+    microsoft_client_secret: str = ""
 
     # Rate Limiting
     rate_limit_per_minute: int = 60
