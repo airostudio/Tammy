@@ -63,6 +63,7 @@ async function sendMessage() {
     // Add user message
     addMessage(message, true);
     chatInput.value = '';
+    showLoading();
 
     try {
         // Call API
@@ -81,6 +82,7 @@ async function sendMessage() {
         const data = await response.json();
 
         // Add assistant response
+        hideLoading();
         addMessage(data.response, false);
 
         // Show suggestions
@@ -95,6 +97,7 @@ async function sendMessage() {
 
     } catch (error) {
         console.error('Error:', error);
+        hideLoading();
         addMessage(
             "I'm having trouble connecting to the server. Please make sure the API is running. " +
             "You can start it with: <code>python -m uvicorn app.main:app --reload</code>",

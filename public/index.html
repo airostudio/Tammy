@@ -4,90 +4,179 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tammy - AI Virtual Executive Assistant & Receptionist</title>
+    <meta name="description" content="Tammy answers your calls, manages your calendar, and keeps your front desk running - a virtual executive assistant and receptionist for growing businesses.">
     <link rel="stylesheet" href="/static/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;1,500;1,600&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="container">
-        <!-- Header -->
-        <header>
-            <div class="logo">
-                <div class="logo-icon">🤖</div>
-                <h1>Tammy</h1>
-            </div>
-            <p class="tagline">AI Virtual Executive Assistant & Receptionist</p>
-        </header>
+    <a class="skip-link" href="#main">Skip to content</a>
 
-        <!-- Main Content -->
-        <main>
-            <!-- Hero Section -->
-            <section class="hero">
-                <h2>Your 24/7 Intelligent Assistant</h2>
-                <p class="hero-description">
-                    Tammy combines the capabilities of an executive assistant and receptionist
-                    into one powerful AI-driven platform with natural language understanding.
-                </p>
-                <div class="cta-buttons">
-                    <a href="#chat" class="btn btn-primary">Try Chat Demo</a>
-                    <a href="/docs" class="btn btn-secondary">API Documentation</a>
+    <nav class="site-nav">
+        <div class="nav-row">
+            <a href="#" class="brand">
+                <span class="brand-mark" aria-hidden="true">T</span>
+                <span class="wordmark">Tammy</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#features">What she does</a></li>
+                <li><a href="#chat">Try the demo</a></li>
+                <li><a href="#api">Integrations</a></li>
+                <li><a href="/docs">Docs</a></li>
+            </ul>
+            <a href="#chat" class="nav-cta">Talk to Tammy</a>
+        </div>
+    </nav>
+
+    <main id="main">
+        <!-- Hero -->
+        <section class="hero">
+            <div class="container hero-grid">
+                <div class="hero-copy">
+                    <span class="eyebrow">Virtual front desk, staffed 24/7</span>
+                    <h1>A receptionist and executive assistant who <em>never misses a call</em></h1>
+                    <p class="hero-description">
+                        Tammy answers your phones, books meetings, greets visitors, and keeps
+                        your inbox in order - so your team can focus on the work instead of
+                        the front desk.
+                    </p>
+                    <div class="cta-buttons">
+                        <a href="#chat" class="btn btn-primary">Try the chat demo</a>
+                        <a href="/docs" class="btn btn-secondary">Read the API docs</a>
+                    </div>
+                    <div class="trust-row">
+                        <span class="trust-item">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M8.5 12.5l2.4 2.4L16 9.5"/></svg>
+                            No calls to voicemail
+                        </span>
+                        <span class="trust-item">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 1.8"/></svg>
+                            Live in minutes
+                        </span>
+                        <span class="trust-item">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+                            Your data, your control
+                        </span>
+                    </div>
                 </div>
-            </section>
 
-            <!-- Features Grid -->
-            <section class="features">
-                <h2>What Tammy Can Do</h2>
+                <div class="hero-visual" aria-hidden="true">
+                    <div class="desk-card-label">
+                        <span><span class="dot"></span>Front desk - today</span>
+                        <span>9:12 AM</span>
+                    </div>
+                    <div class="desk-line">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M3.5 9.5h17"/><path d="M8 3v4M16 3v4"/></svg>
+                        <div>
+                            <div class="desk-line-title">Booked: Priya &amp; J. Alvarez</div>
+                            <div class="desk-line-sub">Product review, moved to 2:00 PM</div>
+                        </div>
+                        <div class="desk-line-time">Just now</div>
+                    </div>
+                    <div class="desk-line">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 21V4.6c0-.6.5-1 1.1-.9l9 1.6c.5.1.9.5.9 1V21"/><path d="M4 21h16"/><circle cx="13.5" cy="13" r="0.9" fill="currentColor" stroke="none"/></svg>
+                        <div>
+                            <div class="desk-line-title">Visitor checked in</div>
+                            <div class="desk-line-sub">D. Okafor for the 10 o'clock, badge #114</div>
+                        </div>
+                        <div class="desk-line-time">8:57 AM</div>
+                    </div>
+                    <div class="desk-line">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5.5" width="17" height="13" rx="2"/><path d="M4 6.5l8 6.5 8-6.5"/></svg>
+                        <div>
+                            <div class="desk-line-title">3 messages triaged</div>
+                            <div class="desk-line-sub">1 flagged for follow-up today</div>
+                        </div>
+                        <div class="desk-line-time">8:30 AM</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features -->
+        <section class="features" id="features">
+            <div class="container">
+                <div class="section-head centered">
+                    <span class="section-eyebrow">What Tammy handles</span>
+                    <h2>Everything a front desk and an EA juggle, in one place</h2>
+                    <p>Built for teams who want the polish of a full-time assistant without the overhead.</p>
+                </div>
                 <div class="features-grid">
                     <div class="feature-card">
-                        <div class="feature-icon">📅</div>
-                        <h3>Calendar Management</h3>
-                        <p>Schedule appointments, check availability, send reminders, and manage conflicts automatically.</p>
+                        <div class="feature-icon">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M3.5 9.5h17"/><path d="M8 3v4M16 3v4"/></svg>
+                        </div>
+                        <h3>Calendar management</h3>
+                        <p>Schedules appointments, checks availability, sends reminders, and resolves conflicts automatically.</p>
                     </div>
                     <div class="feature-card">
-                        <div class="feature-icon">✅</div>
-                        <h3>Task Coordination</h3>
-                        <p>Create tasks, set priorities, track deadlines, and monitor progress across projects.</p>
+                        <div class="feature-icon">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M8.5 12.5l2.4 2.4L16 9.5"/></svg>
+                        </div>
+                        <h3>Task coordination</h3>
+                        <p>Creates tasks, sets priorities, tracks deadlines, and keeps projects moving without the nagging.</p>
                     </div>
                     <div class="feature-card">
-                        <div class="feature-icon">👥</div>
-                        <h3>Contact Management</h3>
-                        <p>Store contacts, track relationships, remember important dates, and maintain connections.</p>
+                        <div class="feature-icon">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8.5" r="3"/><path d="M3.5 19c0-3.3 2.5-5.5 5.5-5.5s5.5 2.2 5.5 5.5"/><circle cx="17" cy="8" r="2.2"/><path d="M15.8 13.6c2.4.4 4.2 2.3 4.2 5"/></svg>
+                        </div>
+                        <h3>Contact management</h3>
+                        <p>Keeps a living directory of contacts, relationships, and the small details worth remembering.</p>
                     </div>
                     <div class="feature-card">
-                        <div class="feature-icon">🚪</div>
-                        <h3>Visitor Tracking</h3>
-                        <p>Check-in visitors, maintain logs, manage badges, and notify hosts automatically.</p>
+                        <div class="feature-icon">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 21V4.6c0-.6.5-1 1.1-.9l9 1.6c.5.1.9.5.9 1V21"/><path d="M4 21h16"/><circle cx="13.5" cy="13" r="0.9" fill="currentColor" stroke="none"/></svg>
+                        </div>
+                        <h3>Visitor tracking</h3>
+                        <p>Checks visitors in, prints a badge, logs the visit, and notifies the right host the moment they arrive.</p>
                     </div>
                     <div class="feature-card">
-                        <div class="feature-icon">📧</div>
+                        <div class="feature-icon">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5.5" width="17" height="13" rx="2"/><path d="M4 6.5l8 6.5 8-6.5"/></svg>
+                        </div>
                         <h3>Communication</h3>
-                        <p>Filter emails, prioritize messages, draft responses, and handle routine inquiries.</p>
+                        <p>Filters and prioritises messages, drafts responses, and handles the routine inquiries on its own.</p>
                     </div>
                     <div class="feature-card">
-                        <div class="feature-icon">🤖</div>
-                        <h3>AI Intelligence</h3>
-                        <p>Natural language understanding, context awareness, and proactive assistance.</p>
+                        <div class="feature-icon">
+                            <svg class="icon" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 3c.4 3.3 1 4.7 2.2 5.9 1.2 1.2 2.6 1.8 5.9 2.2-3.3.4-4.7 1-5.9 2.2-1.2 1.2-1.8 2.6-2.2 5.9-.4-3.3-1-4.7-2.2-5.9-1.2-1.2-2.6-1.8-5.9-2.2 3.3-.4 4.7-1 5.9-2.2 1.2-1.2 1.8-2.6 2.2-5.9z"/></svg>
+                        </div>
+                        <h3>Natural conversation</h3>
+                        <p>Understands plain-language requests and stays aware of context across a conversation.</p>
                     </div>
                 </div>
-            </section>
+            </div>
+        </section>
 
-            <!-- Chat Demo Section -->
-            <section id="chat" class="chat-section">
-                <h2>Try Tammy Now</h2>
-                <p class="section-description">Chat with Tammy using natural language</p>
+        <!-- Chat Demo -->
+        <section id="chat">
+            <div class="container">
+                <div class="section-head centered">
+                    <span class="section-eyebrow">See it in action</span>
+                    <h2>Try Tammy now</h2>
+                    <p>Chat with Tammy using plain language, just like you would with a real assistant.</p>
+                </div>
 
                 <div class="chat-container">
+                    <div class="chat-header">
+                        <span class="brand-mark" aria-hidden="true">T</span>
+                        <span class="chat-header-text">Tammy</span>
+                        <span class="chat-header-status"><span class="dot"></span>Online</span>
+                    </div>
                     <div class="chat-messages" id="chatMessages">
                         <div class="message assistant">
                             <div class="message-content">
-                                <strong>Tammy:</strong> Hi! I'm Tammy, your AI assistant. I can help you with:
+                                <strong>Tammy</strong>
+                                Hi, I'm Tammy. I can help with:
                                 <ul>
                                     <li>Scheduling appointments and meetings</li>
                                     <li>Managing tasks and projects</li>
-                                    <li>Finding and organizing contacts</li>
+                                    <li>Finding and organising contacts</li>
                                     <li>Checking in visitors</li>
                                     <li>Handling messages and communications</li>
                                 </ul>
-                                Try asking me something like "Schedule a meeting tomorrow at 2pm" or "What can you help me with?"
+                                Try asking something like "Schedule a meeting tomorrow at 2pm" or "What can you help me with?"
                             </div>
                         </div>
                     </div>
@@ -105,12 +194,17 @@
 
                     <div class="chat-suggestions" id="suggestions"></div>
                 </div>
-            </section>
+            </div>
+        </section>
 
-            <!-- API Examples -->
-            <section class="api-section">
-                <h2>API Integration</h2>
-                <p class="section-description">Integrate Tammy into your applications</p>
+        <!-- API Examples -->
+        <section id="api">
+            <div class="container">
+                <div class="section-head centered">
+                    <span class="section-eyebrow">For developers</span>
+                    <h2>Integrate Tammy into your own tools</h2>
+                    <p>A straightforward REST API - bring Tammy into whatever your team already uses.</p>
+                </div>
 
                 <div class="code-examples">
                     <div class="code-block">
@@ -118,17 +212,17 @@
                             <span>Chat with Tammy</span>
                             <button class="copy-btn" onclick="copyCode(this)">Copy</button>
                         </div>
-                        <pre><code>curl -X POST http://localhost:8000/api/chat \
+                        <pre><code>curl -X POST https://your-domain.com/api/chat \
   -H "Content-Type: application/json" \
   -d '{"message": "Schedule a meeting tomorrow at 2pm"}'</code></pre>
                     </div>
 
                     <div class="code-block">
                         <div class="code-header">
-                            <span>Create an Appointment</span>
+                            <span>Create an appointment</span>
                             <button class="copy-btn" onclick="copyCode(this)">Copy</button>
                         </div>
-                        <pre><code>curl -X POST http://localhost:8000/api/appointments \
+                        <pre><code>curl -X POST https://your-domain.com/api/appointments \
   -H "Content-Type: application/json" \
   -d '{
     "user_id": "user123",
@@ -140,15 +234,20 @@
                 </div>
 
                 <div class="api-links">
-                    <a href="/docs" class="api-link">📚 Full API Documentation</a>
-                    <a href="/redoc" class="api-link">📖 ReDoc Documentation</a>
-                    <a href="/health" class="api-link">💚 Health Check</a>
+                    <a href="/docs" class="api-link">Full API documentation</a>
+                    <a href="/redoc" class="api-link">ReDoc reference</a>
+                    <a href="/health" class="api-link">Health check</a>
                 </div>
-            </section>
+            </div>
+        </section>
 
-            <!-- Tech Stack -->
-            <section class="tech-section">
-                <h2>Built With Modern Technology</h2>
+        <!-- Tech Stack -->
+        <section>
+            <div class="container">
+                <div class="section-head centered">
+                    <span class="section-eyebrow">Under the hood</span>
+                    <h2>Built on a modern, reliable stack</h2>
+                </div>
                 <div class="tech-stack">
                     <div class="tech-item">FastAPI</div>
                     <div class="tech-item">Python 3.11+</div>
@@ -157,19 +256,20 @@
                     <div class="tech-item">RESTful API</div>
                     <div class="tech-item">Docker</div>
                 </div>
-            </section>
-        </main>
+            </div>
+        </section>
+    </main>
 
-        <!-- Footer -->
-        <footer>
-            <p>&copy; 2025 Tammy AI Assistant. Open Source under MIT License.</p>
+    <footer>
+        <div class="container footer-row">
+            <p>&copy; 2026 Tammy AI Assistant. Open source under the MIT License.</p>
             <div class="footer-links">
                 <a href="https://github.com/airostudio/Tammy">GitHub</a>
                 <a href="/docs">Documentation</a>
                 <a href="/api">API</a>
             </div>
-        </footer>
-    </div>
+        </div>
+    </footer>
 
     <script src="/static/script.js"></script>
 </body>
