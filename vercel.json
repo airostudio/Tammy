@@ -27,7 +27,7 @@
       "dest": "/public/index.html"
     },
     {
-      "src": "/admin",
+      "src": "/admin/?",
       "dest": "/public/admin/index.html"
     },
     {

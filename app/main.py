@@ -3,7 +3,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, JSONResponse
 from contextlib import asynccontextmanager
 from datetime import datetime, timezone
 import logging
@@ -102,6 +102,24 @@ async def root():
             "api": "/api",
             "web_interface": "Install frontend files to see the web interface"
         }
+
+
+@app.get("/admin")
+async def admin_page():
+    """Serve the admin dashboard shell.
+
+    Vercel routes /admin straight to this same static file (see
+    vercel.json), so this handler normally never runs there - it's a
+    fallback for local/Docker use and for Vercel routing edge cases,
+    mirroring root()'s fallback for "/".
+    """
+    admin_index_path = os.path.join(public_dir, "admin", "index.html")
+    if os.path.exists(admin_index_path):
+        return FileResponse(admin_index_path)
+    return JSONResponse(
+        status_code=404,
+        content={"detail": "Admin interface not installed"},
+    )
 
 
 @app.get("/health")
