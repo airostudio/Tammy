@@ -7,6 +7,7 @@ from app.models.task import Task
 from app.models.visitor import Visitor
 from app.models.message import Message
 from app.models.document import Document
+from app.models.calendar_connection import CalendarConnection
 
 __all__ = [
     "User",
@@ -16,4 +17,5 @@ __all__ = [
     "Visitor",
     "Message",
     "Document",
+    "CalendarConnection",
 ]

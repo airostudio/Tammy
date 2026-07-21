@@ -1,5 +1,6 @@
 """Database configuration and session management"""
 
+from sqlalchemy import inspect, text
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
 from sqlalchemy.orm import DeclarativeBase
 from app.config import get_settings
@@ -50,10 +51,36 @@ async def get_db():
             await session.close()
 
 
+# Columns added to existing models after their table may already exist in a
+# live database. Base.metadata.create_all() only creates missing TABLES, it
+# never alters existing ones, so a new column here needs to be added by hand
+# until this project has real Alembic migrations (tracked as a known gap).
+_PENDING_COLUMN_UPGRADES = {
+    "appointments": [
+        ("external_calendar_provider", "VARCHAR"),
+        ("external_calendar_event_id", "VARCHAR"),
+    ],
+}
+
+
+def _add_missing_columns(sync_conn):
+    inspector = inspect(sync_conn)
+    existing_tables = set(inspector.get_table_names())
+
+    for table_name, columns in _PENDING_COLUMN_UPGRADES.items():
+        if table_name not in existing_tables:
+            continue  # create_all() will create it with every current column
+        existing_columns = {c["name"] for c in inspector.get_columns(table_name)}
+        for column_name, column_type in columns:
+            if column_name not in existing_columns:
+                sync_conn.execute(text(f"ALTER TABLE {table_name} ADD COLUMN {column_name} {column_type}"))
+
+
 async def init_db():
     """Initialize database tables"""
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+        await conn.run_sync(_add_missing_columns)
 
 
 async def close_db():

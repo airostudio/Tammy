@@ -1,7 +1,7 @@
 """API routes"""
 
 from fastapi import APIRouter, Depends
-from app.api import appointments, contacts, tasks, visitors, messages, chat, telephony, admin
+from app.api import appointments, contacts, tasks, visitors, messages, chat, telephony, admin, calendar
 from app.api.deps import require_admin
 
 api_router = APIRouter()
@@ -32,3 +32,7 @@ api_router.include_router(
 # Public endpoints - used by the marketing/demo frontend and carrier webhooks
 api_router.include_router(chat.router, prefix="/chat", tags=["chat"])
 api_router.include_router(telephony.router, prefix="/telephony", tags=["telephony"])
+
+# Mixed: the iCal feed is intentionally public (token-gated, see
+# app/api/calendar.py), feed-url is admin-gated on its own route.
+api_router.include_router(calendar.router, prefix="/calendar", tags=["calendar"])

@@ -32,6 +32,12 @@ class Appointment(Base):
     status = Column(String, default="scheduled")  # scheduled, completed, cancelled, rescheduled
     is_reminder_sent = Column(Boolean, default=False)
 
+    # External calendar sync (Google Calendar / Microsoft 365) - set once
+    # this appointment has been pushed to a connected external calendar, so
+    # a later update/cancel can find and modify the same external event.
+    external_calendar_provider = Column(String, nullable=True)
+    external_calendar_event_id = Column(String, nullable=True)
+
     # Recurrence
     is_recurring = Column(Boolean, default=False)
     recurrence_rule = Column(String, nullable=True)  # RRULE format
