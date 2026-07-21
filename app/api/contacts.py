@@ -2,7 +2,7 @@
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
-from typing import List
+from typing import List, Optional
 
 from app.database import get_db
 from app.schemas.contact import ContactCreate, ContactUpdate, ContactResponse
@@ -18,8 +18,8 @@ async def create_contact(contact: ContactCreate, db: AsyncSession = Depends(get_
 
 
 @router.get("/", response_model=List[ContactResponse])
-async def get_contacts(user_id: str, db: AsyncSession = Depends(get_db)):
-    """Get all contacts for a user"""
+async def get_contacts(user_id: Optional[str] = None, db: AsyncSession = Depends(get_db)):
+    """Get contacts, optionally filtered by user. Omitting user_id returns all."""
     return await ContactService.get_user_contacts(db, user_id)
 
 

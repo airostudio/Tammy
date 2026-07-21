@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tammy Admin</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/admin.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;1,500;1,600&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="admin-body">
+
+    <!-- Login screen -->
+    <main class="admin-login-screen" id="loginScreen">
+        <form class="admin-login-card" id="loginForm">
+            <span class="brand-mark" aria-hidden="true">T</span>
+            <h1>Tammy Admin</h1>
+            <p class="admin-login-sub">Enter the admin password to view the front desk data.</p>
+            <input
+                type="password"
+                id="loginPassword"
+                class="chat-input"
+                placeholder="Admin password"
+                autocomplete="current-password"
+                required
+            >
+            <button type="submit" class="btn btn-primary admin-login-btn" id="loginButton">Sign in</button>
+            <p class="admin-login-error" id="loginError" hidden></p>
+        </form>
+    </main>
+
+    <!-- Dashboard -->
+    <div class="admin-shell" id="dashboard" hidden>
+        <header class="admin-header">
+            <div class="brand">
+                <span class="brand-mark" aria-hidden="true">T</span>
+                <span class="wordmark">Tammy Admin</span>
+            </div>
+            <a href="/" class="admin-header-link">View site</a>
+            <button class="btn btn-secondary admin-logout-btn" id="logoutButton">Sign out</button>
+        </header>
+
+        <nav class="admin-tabs" id="tabs"></nav>
+
+        <main class="admin-content">
+            <div class="admin-toolbar">
+                <h2 id="panelTitle">Appointments</h2>
+                <button class="btn btn-secondary admin-refresh-btn" id="refreshButton">Refresh</button>
+            </div>
+            <div id="panelBody">
+                <p class="admin-empty">Loading…</p>
+            </div>
+        </main>
+    </div>
+
+    <script src="/static/admin.js"></script>
+</body>
+</html>

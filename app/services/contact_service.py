@@ -50,11 +50,13 @@ class ContactService:
         return result.scalar_one_or_none()
 
     @staticmethod
-    async def get_user_contacts(db: AsyncSession, user_id: str) -> List[Contact]:
-        """Get all contacts for a user"""
-        result = await db.execute(
-            select(Contact).where(Contact.user_id == user_id).order_by(Contact.full_name)
-        )
+    async def get_user_contacts(db: AsyncSession, user_id: Optional[str] = None) -> List[Contact]:
+        """Get contacts, optionally filtered by user.
+        Omitting user_id returns contacts across all users (admin use)."""
+        query = select(Contact)
+        if user_id:
+            query = query.where(Contact.user_id == user_id)
+        result = await db.execute(query.order_by(Contact.full_name))
         return list(result.scalars().all())
 
     @staticmethod

@@ -31,12 +31,12 @@ async def get_appointment(appointment_id: str, db: AsyncSession = Depends(get_db
 
 @router.get("/", response_model=List[AppointmentResponse])
 async def get_appointments(
-    user_id: str,
+    user_id: Optional[str] = None,
     start_date: Optional[str] = None,
     end_date: Optional[str] = None,
     db: AsyncSession = Depends(get_db),
 ):
-    """Get appointments for a user"""
+    """Get appointments, optionally filtered by user. Omitting user_id returns all."""
     start = datetime.fromisoformat(start_date) if start_date else None
     end = datetime.fromisoformat(end_date) if end_date else None
     return await AppointmentService.get_user_appointments(db, user_id, start, end)

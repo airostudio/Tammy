@@ -42,11 +42,17 @@ class TaskService:
 
     @staticmethod
     async def get_user_tasks(
-        db: AsyncSession, user_id: str, status: Optional[str] = None, priority: Optional[str] = None
+        db: AsyncSession,
+        user_id: Optional[str] = None,
+        status: Optional[str] = None,
+        priority: Optional[str] = None,
     ) -> List[Task]:
-        """Get all tasks for a user, optionally filtered by status and priority"""
-        query = select(Task).where(Task.user_id == user_id)
+        """Get tasks, optionally filtered by user, status and priority.
+        Omitting user_id returns tasks across all users (admin use)."""
+        query = select(Task)
 
+        if user_id:
+            query = query.where(Task.user_id == user_id)
         if status:
             query = query.where(Task.status == status)
         if priority:

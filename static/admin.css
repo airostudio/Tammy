@@ -1,0 +1,276 @@
+/* ---------------------------------------------------------------
+   Tammy admin dashboard - built on the tokens defined in style.css
+----------------------------------------------------------------*/
+
+.admin-body {
+    background: var(--surface-sunken);
+}
+
+/* Login screen */
+
+.admin-login-screen {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+}
+
+.admin-login-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    padding: 40px;
+    max-width: 360px;
+    width: 100%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+}
+
+.admin-login-card .brand-mark {
+    width: 44px;
+    height: 44px;
+    font-size: 20px;
+}
+
+.admin-login-card h1 {
+    font-family: "Fraunces", Georgia, serif;
+    font-style: italic;
+    font-size: 26px;
+    font-weight: 600;
+}
+
+.admin-login-sub {
+    color: var(--ink-soft);
+    font-size: 14.5px;
+    margin-bottom: 8px;
+}
+
+.admin-login-card .chat-input {
+    width: 100%;
+    text-align: left;
+}
+
+.admin-login-btn {
+    width: 100%;
+    justify-content: center;
+}
+
+.admin-login-error {
+    color: #b3261e;
+    font-size: 13.5px;
+}
+
+@media (prefers-color-scheme: dark) {
+    .admin-login-error {
+        color: #ff8a80;
+    }
+}
+
+:root[data-theme="dark"] .admin-login-error {
+    color: #ff8a80;
+}
+
+/* Dashboard shell */
+
+.admin-shell {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.admin-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 16px 28px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--line);
+}
+
+.admin-header-link {
+    margin-left: auto;
+    font-size: 14px;
+    color: var(--ink-soft);
+    text-decoration: none;
+}
+
+.admin-header-link:hover {
+    color: var(--teal-deep);
+}
+
+.admin-logout-btn {
+    padding: 8px 18px;
+    font-size: 14px;
+}
+
+.admin-tabs {
+    display: flex;
+    gap: 4px;
+    padding: 0 28px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--line);
+    overflow-x: auto;
+}
+
+.admin-tab {
+    border: none;
+    background: none;
+    padding: 14px 16px;
+    font-size: 14.5px;
+    font-weight: 500;
+    color: var(--ink-soft);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    font-family: inherit;
+}
+
+.admin-tab:hover {
+    color: var(--ink);
+}
+
+.admin-tab.active {
+    color: var(--teal-deep);
+    border-bottom-color: var(--teal);
+    font-weight: 600;
+}
+
+.admin-content {
+    flex: 1;
+    padding: 28px;
+    max-width: 1100px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.admin-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+}
+
+.admin-toolbar h2 {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.admin-refresh-btn {
+    padding: 8px 18px;
+    font-size: 13.5px;
+}
+
+.admin-empty {
+    color: var(--ink-faint);
+    padding: 40px 0;
+    text-align: center;
+}
+
+/* Data table */
+
+.admin-table-wrap {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    overflow-x: auto;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.admin-table th {
+    text-align: left;
+    padding: 12px 18px;
+    font-size: 12.5px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    border-bottom: 1px solid var(--line);
+    white-space: nowrap;
+}
+
+.admin-table td {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--line);
+    vertical-align: middle;
+}
+
+.admin-table tr:last-child td {
+    border-bottom: none;
+}
+
+.admin-table tr:hover td {
+    background: var(--surface-sunken);
+}
+
+.admin-pill {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 12.5px;
+    font-weight: 600;
+    background: var(--teal-tint);
+    color: var(--teal-deep);
+    white-space: nowrap;
+}
+
+.admin-pill.is-muted {
+    background: var(--surface-sunken);
+    color: var(--ink-faint);
+}
+
+.admin-pill.is-warning {
+    background: var(--brass-tint);
+    color: var(--brass);
+}
+
+.admin-row-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    white-space: nowrap;
+}
+
+.admin-action-btn {
+    padding: 6px 14px;
+    font-size: 12.5px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--line-strong);
+    background: var(--surface);
+    color: var(--ink);
+    cursor: pointer;
+    font-family: inherit;
+    transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.admin-action-btn:hover {
+    border-color: var(--teal);
+    color: var(--teal-deep);
+}
+
+.admin-action-btn.is-danger:hover {
+    border-color: #b3261e;
+    color: #b3261e;
+}
+
+@media (max-width: 700px) {
+    .admin-header {
+        padding: 14px 18px;
+    }
+
+    .admin-tabs {
+        padding: 0 18px;
+    }
+
+    .admin-content {
+        padding: 18px;
+    }
+}

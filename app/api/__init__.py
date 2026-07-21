@@ -1,15 +1,34 @@
 """API routes"""
 
-from fastapi import APIRouter
-from app.api import appointments, contacts, tasks, visitors, messages, chat, telephony
+from fastapi import APIRouter, Depends
+from app.api import appointments, contacts, tasks, visitors, messages, chat, telephony, admin
+from app.api.deps import require_admin
 
 api_router = APIRouter()
 
-# Include all route modules
-api_router.include_router(appointments.router, prefix="/appointments", tags=["appointments"])
-api_router.include_router(contacts.router, prefix="/contacts", tags=["contacts"])
-api_router.include_router(tasks.router, prefix="/tasks", tags=["tasks"])
-api_router.include_router(visitors.router, prefix="/visitors", tags=["visitors"])
-api_router.include_router(messages.router, prefix="/messages", tags=["messages"])
+# Admin session endpoints (login is necessarily public - you can't be
+# logged in yet when you're logging in)
+api_router.include_router(admin.router, prefix="/admin", tags=["admin"])
+
+# Data endpoints - gated behind the shared admin password, since this is
+# business data (appointments, contacts, tasks, visitors, messages) with
+# no other access control in front of it.
+api_router.include_router(
+    appointments.router, prefix="/appointments", tags=["appointments"], dependencies=[Depends(require_admin)]
+)
+api_router.include_router(
+    contacts.router, prefix="/contacts", tags=["contacts"], dependencies=[Depends(require_admin)]
+)
+api_router.include_router(
+    tasks.router, prefix="/tasks", tags=["tasks"], dependencies=[Depends(require_admin)]
+)
+api_router.include_router(
+    visitors.router, prefix="/visitors", tags=["visitors"], dependencies=[Depends(require_admin)]
+)
+api_router.include_router(
+    messages.router, prefix="/messages", tags=["messages"], dependencies=[Depends(require_admin)]
+)
+
+# Public endpoints - used by the marketing/demo frontend and carrier webhooks
 api_router.include_router(chat.router, prefix="/chat", tags=["chat"])
 api_router.include_router(telephony.router, prefix="/telephony", tags=["telephony"])

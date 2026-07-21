@@ -28,12 +28,12 @@ async def get_task(task_id: str, db: AsyncSession = Depends(get_db)):
 
 @router.get("/", response_model=List[TaskResponse])
 async def get_tasks(
-    user_id: str,
+    user_id: Optional[str] = None,
     status: Optional[str] = None,
     priority: Optional[str] = None,
     db: AsyncSession = Depends(get_db),
 ):
-    """Get tasks for a user"""
+    """Get tasks, optionally filtered by user. Omitting user_id returns all."""
     return await TaskService.get_user_tasks(db, user_id, status, priority)
 
 

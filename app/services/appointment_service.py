@@ -47,11 +47,17 @@ class AppointmentService:
 
     @staticmethod
     async def get_user_appointments(
-        db: AsyncSession, user_id: str, start_date: Optional[datetime] = None, end_date: Optional[datetime] = None
+        db: AsyncSession,
+        user_id: Optional[str] = None,
+        start_date: Optional[datetime] = None,
+        end_date: Optional[datetime] = None,
     ) -> List[Appointment]:
-        """Get all appointments for a user, optionally filtered by date range"""
-        query = select(Appointment).where(Appointment.user_id == user_id)
+        """Get appointments, optionally filtered by user and date range.
+        Omitting user_id returns appointments across all users (admin use)."""
+        query = select(Appointment)
 
+        if user_id:
+            query = query.where(Appointment.user_id == user_id)
         if start_date:
             query = query.where(Appointment.start_time >= start_date)
         if end_date:

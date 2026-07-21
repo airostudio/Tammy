@@ -23,6 +23,10 @@ class Settings(BaseSettings):
     algorithm: str = "HS256"
     access_token_expire_minutes: int = 30
 
+    # Admin section - single shared password gating /admin and the
+    # underlying data API. Empty means the admin section is disabled.
+    admin_password: str = ""
+
     # OpenAI
     openai_api_key: str = ""
     openai_model: str = "gpt-4-turbo-preview"
