@@ -48,12 +48,33 @@
         <main class="admin-content">
             <div class="admin-toolbar">
                 <h2 id="panelTitle">Appointments</h2>
-                <button class="btn btn-secondary admin-refresh-btn" id="refreshButton">Refresh</button>
+                <div class="admin-toolbar-actions">
+                    <button class="btn btn-secondary admin-refresh-btn" id="refreshButton">Refresh</button>
+                    <button class="btn btn-primary admin-new-btn" id="newButton">+ New</button>
+                </div>
             </div>
             <div id="panelBody">
                 <p class="admin-empty">Loading…</p>
             </div>
         </main>
+    </div>
+
+    <!-- Create/edit modal -->
+    <div class="admin-modal-overlay" id="modalOverlay" hidden>
+        <div class="admin-modal">
+            <div class="admin-modal-header">
+                <h3 id="modalTitle">New item</h3>
+                <button type="button" class="admin-modal-close" id="modalClose" aria-label="Close">&times;</button>
+            </div>
+            <form id="modalForm">
+                <div class="admin-modal-fields" id="modalFields"></div>
+                <p class="admin-login-error" id="modalError" hidden></p>
+                <div class="admin-modal-actions">
+                    <button type="button" class="btn btn-secondary" id="modalCancel">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="modalSave">Save</button>
+                </div>
+            </form>
+        </div>
     </div>
 
     <script src="/static/admin.js"></script>

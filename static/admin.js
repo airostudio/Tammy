@@ -1,5 +1,5 @@
-// Tammy admin dashboard - data-driven table renderer over the existing
-// appointments/tasks/contacts/visitors/messages API, gated by the
+// Tammy admin dashboard - data-driven table + create/edit forms over the
+// existing appointments/tasks/contacts/visitors/messages API, gated by the
 // admin session cookie (see app/api/admin.py, app/api/deps.py).
 
 (function () {
@@ -14,7 +14,21 @@
     const panelTitle = document.getElementById('panelTitle');
     const panelBody = document.getElementById('panelBody');
     const refreshButton = document.getElementById('refreshButton');
+    const newButton = document.getElementById('newButton');
     const logoutButton = document.getElementById('logoutButton');
+
+    const modalOverlay = document.getElementById('modalOverlay');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalFields = document.getElementById('modalFields');
+    const modalForm = document.getElementById('modalForm');
+    const modalError = document.getElementById('modalError');
+    const modalClose = document.getElementById('modalClose');
+    const modalCancel = document.getElementById('modalCancel');
+    const modalSave = document.getElementById('modalSave');
+
+    // Every record the assistant/admin creates without a real per-user login
+    // attaches to this fixed single-tenant user (see app/utils/default_user.py).
+    const DEFAULT_USER_ID = 'system';
 
     function formatDateTime(value) {
         if (!value) return '—';
@@ -23,6 +37,14 @@
         return date.toLocaleString(undefined, {
             month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit',
         });
+    }
+
+    function toDatetimeLocal(value) {
+        if (!value) return '';
+        const date = new Date(value);
+        if (isNaN(date.getTime())) return '';
+        const pad = (n) => String(n).padStart(2, '0');
+        return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
     }
 
     function pill(value, tone) {
@@ -45,12 +67,17 @@
         return div.innerHTML;
     }
 
-    // Each resource: where to fetch the list from, which columns to show,
-    // and which row-level actions are available (shown conditionally).
+    // Each resource: where to fetch/save it, which columns the table shows,
+    // which row-level actions are available, and which fields the
+    // create/edit form should render. needsUserId is true for the resources
+    // that are scoped to a user_id foreign key (there's no per-admin login,
+    // so new records attach to the shared DEFAULT_USER_ID).
     const RESOURCES = {
         appointments: {
             label: 'Appointments',
+            singular: 'appointment',
             endpoint: '/api/appointments/',
+            needsUserId: true,
             columns: [
                 { key: 'title', label: 'Title' },
                 { key: 'start_time', label: 'Start', format: formatDateTime },
@@ -59,12 +86,25 @@
                 { key: 'status', label: 'Status', format: statusPill, raw: true },
             ],
             actions: [
+                { label: 'Edit', isEdit: true },
                 { label: 'Delete', danger: true, confirm: 'Delete this appointment?', run: (row) => del(`/api/appointments/${row.id}`) },
+            ],
+            fields: [
+                { key: 'title', label: 'Title', type: 'text', required: true },
+                { key: 'description', label: 'Description', type: 'textarea' },
+                { key: 'location', label: 'Location', type: 'text' },
+                { key: 'start_time', label: 'Start time', type: 'datetime-local', required: true },
+                { key: 'duration_minutes', label: 'Duration (minutes)', type: 'number', default: 60 },
+                { key: 'attendees', label: 'Attendees (comma-separated)', type: 'list' },
+                { key: 'meeting_url', label: 'Meeting URL', type: 'text' },
+                { key: 'conference_room', label: 'Conference room', type: 'text' },
             ],
         },
         tasks: {
             label: 'Tasks',
+            singular: 'task',
             endpoint: '/api/tasks/',
+            needsUserId: true,
             columns: [
                 { key: 'title', label: 'Title' },
                 { key: 'priority', label: 'Priority', format: statusPill, raw: true },
@@ -72,16 +112,27 @@
                 { key: 'due_date', label: 'Due', format: formatDateTime },
             ],
             actions: [
+                { label: 'Edit', isEdit: true },
                 {
                     label: 'Complete', show: (row) => row.status !== 'completed',
                     run: (row) => post(`/api/tasks/${row.id}/complete`),
                 },
                 { label: 'Delete', danger: true, confirm: 'Delete this task?', run: (row) => del(`/api/tasks/${row.id}`) },
             ],
+            fields: [
+                { key: 'title', label: 'Title', type: 'text', required: true },
+                { key: 'description', label: 'Description', type: 'textarea' },
+                { key: 'priority', label: 'Priority', type: 'select', options: ['low', 'medium', 'high', 'urgent'], default: 'medium' },
+                { key: 'due_date', label: 'Due date', type: 'datetime-local' },
+                { key: 'project', label: 'Project', type: 'text' },
+                { key: 'category', label: 'Category', type: 'text' },
+            ],
         },
         contacts: {
             label: 'Contacts',
+            singular: 'contact',
             endpoint: '/api/contacts/',
+            needsUserId: true,
             columns: [
                 { key: 'full_name', label: 'Name' },
                 { key: 'company', label: 'Company' },
@@ -89,11 +140,25 @@
                 { key: 'phone_number', label: 'Phone' },
             ],
             actions: [
+                { label: 'Edit', isEdit: true },
                 { label: 'Delete', danger: true, confirm: 'Delete this contact?', run: (row) => del(`/api/contacts/${row.id}`) },
+            ],
+            fields: [
+                { key: 'first_name', label: 'First name', type: 'text', required: true },
+                { key: 'last_name', label: 'Last name', type: 'text', required: true },
+                { key: 'email', label: 'Email', type: 'email' },
+                { key: 'phone_number', label: 'Phone', type: 'text' },
+                { key: 'mobile_number', label: 'Mobile', type: 'text' },
+                { key: 'company', label: 'Company', type: 'text' },
+                { key: 'job_title', label: 'Job title', type: 'text' },
+                { key: 'relationship_type', label: 'Relationship', type: 'text' },
+                { key: 'priority', label: 'Priority', type: 'select', options: ['low', 'normal', 'high'], default: 'normal' },
+                { key: 'notes', label: 'Notes', type: 'textarea' },
             ],
         },
         visitors: {
             label: 'Visitors',
+            singular: 'visitor',
             endpoint: '/api/visitors/',
             columns: [
                 { key: 'full_name', label: 'Name' },
@@ -102,6 +167,7 @@
                 { key: 'check_in_time', label: 'Checked in', format: formatDateTime },
             ],
             actions: [
+                { label: 'Edit', isEdit: true },
                 {
                     label: 'Check in', show: (row) => row.status === 'scheduled',
                     run: (row) => post(`/api/visitors/${row.id}/check-in`),
@@ -112,9 +178,21 @@
                 },
                 { label: 'Delete', danger: true, confirm: 'Delete this visitor record?', run: (row) => del(`/api/visitors/${row.id}`) },
             ],
+            fields: [
+                { key: 'full_name', label: 'Visitor name', type: 'text', required: true },
+                { key: 'host_name', label: 'Host', type: 'text', required: true },
+                { key: 'company', label: 'Company', type: 'text' },
+                { key: 'email', label: 'Email', type: 'email' },
+                { key: 'phone_number', label: 'Phone', type: 'text' },
+                { key: 'visit_type', label: 'Visit type', type: 'select', options: ['in_person', 'call', 'video_call'], default: 'in_person' },
+                { key: 'purpose', label: 'Purpose', type: 'textarea' },
+                { key: 'scheduled_time', label: 'Scheduled time', type: 'datetime-local' },
+                { key: 'location', label: 'Location', type: 'text' },
+            ],
         },
         messages: {
             label: 'Messages',
+            singular: 'message',
             endpoint: '/api/messages/',
             columns: [
                 { key: 'message_type', label: 'Type' },
@@ -123,7 +201,19 @@
                 { key: 'status', label: 'Status', format: statusPill, raw: true },
             ],
             actions: [
+                { label: 'Edit', isEdit: true },
                 { label: 'Delete', danger: true, confirm: 'Delete this message?', run: (row) => del(`/api/messages/${row.id}`) },
+            ],
+            fields: [
+                { key: 'message_type', label: 'Type', type: 'select', options: ['email', 'sms', 'call', 'chat', 'note'], required: true, default: 'email' },
+                { key: 'direction', label: 'Direction', type: 'select', options: ['inbound', 'outbound'], required: true, default: 'inbound' },
+                { key: 'from_name', label: 'From name', type: 'text' },
+                { key: 'from_email', label: 'From email', type: 'email' },
+                { key: 'from_phone', label: 'From phone', type: 'text' },
+                { key: 'to_email', label: 'To email', type: 'email' },
+                { key: 'subject', label: 'Subject', type: 'text' },
+                { key: 'body', label: 'Body', type: 'textarea' },
+                { key: 'priority', label: 'Priority', type: 'select', options: ['low', 'normal', 'high', 'urgent'], default: 'normal' },
             ],
         },
     };
@@ -149,6 +239,19 @@
         const response = await apiFetch(path, { method: 'DELETE' });
         if (!response.ok && response.status !== 204) throw new Error('Request failed');
         return response;
+    }
+
+    async function responseErrorMessage(response) {
+        try {
+            const data = await response.json();
+            if (Array.isArray(data.detail)) {
+                return data.detail.map((d) => d.msg || JSON.stringify(d)).join('; ');
+            }
+            if (data.detail) return data.detail;
+        } catch (err) {
+            // fall through to generic message
+        }
+        return 'Could not save. Please check the fields and try again.';
     }
 
     function renderTabs() {
@@ -218,6 +321,12 @@
             btn.addEventListener('click', async () => {
                 const row = rows.find((r) => String(r.id) === btn.dataset.row);
                 const action = resource.actions[Number(btn.dataset.action)];
+
+                if (action.isEdit) {
+                    openModal('edit', activeTab, row);
+                    return;
+                }
+
                 if (action.confirm && !window.confirm(action.confirm)) return;
 
                 btn.disabled = true;
@@ -232,9 +341,155 @@
         });
     }
 
+    // --- Create/edit modal ---------------------------------------------
+
+    let modalMode = null; // 'create' | 'edit'
+    let modalRow = null;
+    let modalResourceKey = null;
+
+    function buildFieldElement(field, value) {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'admin-field';
+
+        const label = document.createElement('label');
+        label.setAttribute('for', `field_${field.key}`);
+        label.textContent = field.label;
+        wrapper.appendChild(label);
+
+        let input;
+        if (field.type === 'textarea') {
+            input = document.createElement('textarea');
+            input.value = value == null ? '' : value;
+        } else if (field.type === 'select') {
+            input = document.createElement('select');
+            field.options.forEach((opt) => {
+                const optionEl = document.createElement('option');
+                optionEl.value = opt;
+                optionEl.textContent = opt.replace(/_/g, ' ');
+                if (opt === value) optionEl.selected = true;
+                input.appendChild(optionEl);
+            });
+        } else {
+            input = document.createElement('input');
+            if (field.type === 'datetime-local') {
+                input.type = 'datetime-local';
+                input.value = toDatetimeLocal(value);
+            } else if (field.type === 'number') {
+                input.type = 'number';
+                input.value = value == null ? '' : value;
+            } else if (field.type === 'email') {
+                input.type = 'email';
+                input.value = value == null ? '' : value;
+            } else if (field.type === 'list') {
+                input.type = 'text';
+                input.value = Array.isArray(value) ? value.join(', ') : (value == null ? '' : value);
+            } else {
+                input.type = 'text';
+                input.value = value == null ? '' : value;
+            }
+        }
+
+        input.id = `field_${field.key}`;
+        input.name = field.key;
+        if (field.required) input.required = true;
+
+        wrapper.appendChild(input);
+        return wrapper;
+    }
+
+    function openModal(mode, resourceKey, row) {
+        modalMode = mode;
+        modalRow = row || null;
+        modalResourceKey = resourceKey;
+
+        const resource = RESOURCES[resourceKey];
+        const noun = resource.singular || resource.label;
+        modalTitle.textContent = mode === 'create' ? `New ${noun}` : `Edit ${noun}`;
+        modalError.hidden = true;
+        modalFields.innerHTML = '';
+
+        resource.fields.forEach((field) => {
+            const value = row ? row[field.key] : field.default;
+            modalFields.appendChild(buildFieldElement(field, value));
+        });
+
+        modalOverlay.hidden = false;
+    }
+
+    function closeModal() {
+        modalOverlay.hidden = true;
+        modalMode = null;
+        modalRow = null;
+        modalResourceKey = null;
+    }
+
+    modalClose.addEventListener('click', closeModal);
+    modalCancel.addEventListener('click', closeModal);
+    modalOverlay.addEventListener('click', (e) => {
+        if (e.target === modalOverlay) closeModal();
+    });
+
+    newButton.addEventListener('click', () => openModal('create', activeTab, null));
+
+    modalForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        modalError.hidden = true;
+
+        const resource = RESOURCES[modalResourceKey];
+        const formData = new FormData(modalForm);
+        const body = {};
+
+        resource.fields.forEach((field) => {
+            const raw = formData.get(field.key);
+            if (field.type === 'number') {
+                body[field.key] = raw === '' || raw === null ? null : Number(raw);
+            } else if (field.type === 'list') {
+                body[field.key] = raw ? String(raw).split(',').map((s) => s.trim()).filter(Boolean) : [];
+            } else {
+                body[field.key] = raw === '' ? null : raw;
+            }
+        });
+
+        if (modalMode === 'create' && resource.needsUserId) {
+            body.user_id = DEFAULT_USER_ID;
+        }
+
+        modalSave.disabled = true;
+
+        try {
+            const path = modalMode === 'create'
+                ? resource.endpoint
+                : `${resource.endpoint}${modalRow.id}`;
+            const response = await apiFetch(path, {
+                method: modalMode === 'create' ? 'POST' : 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body),
+            });
+
+            if (!response.ok) {
+                modalError.textContent = await responseErrorMessage(response);
+                modalError.hidden = false;
+                return;
+            }
+
+            closeModal();
+            loadPanel();
+        } catch (err) {
+            if (err.message !== 'Not authenticated') {
+                modalError.textContent = 'Could not reach the server. Please try again.';
+                modalError.hidden = false;
+            }
+        } finally {
+            modalSave.disabled = false;
+        }
+    });
+
+    // --- Login / session -------------------------------------------------
+
     function showLogin() {
         dashboard.hidden = true;
         loginScreen.hidden = false;
+        closeModal();
     }
 
     function showDashboard() {

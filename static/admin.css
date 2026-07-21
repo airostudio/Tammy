@@ -6,6 +6,16 @@
     background: var(--surface-sunken);
 }
 
+/* Several sections below set "display: flex" unconditionally and are
+   toggled with the [hidden] attribute from admin.js. [hidden] and a class
+   selector have equal specificity, so without this an author's "display"
+   declaration silently wins over the browser's implicit "display: none" for
+   [hidden] - leaving an invisible-but-still-flex element that can cover the
+   page and intercept clicks even while "hidden". */
+[hidden] {
+    display: none !important;
+}
+
 /* Login screen */
 
 .admin-login-screen {
@@ -155,6 +165,16 @@
     margin-bottom: 18px;
 }
 
+.admin-toolbar-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.admin-new-btn {
+    padding: 9px 18px;
+    font-size: 13.5px;
+}
+
 .admin-toolbar h2 {
     font-size: 20px;
     font-weight: 600;
@@ -261,6 +281,109 @@
     color: #b3261e;
 }
 
+/* Create/edit modal */
+
+.admin-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(27, 36, 32, 0.45);
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 60px 20px;
+    overflow-y: auto;
+    z-index: 100;
+}
+
+/* [hidden] and .admin-modal-overlay have equal specificity, so without this
+   the "display: flex" above would win over the browser's implicit
+   "display: none" for [hidden] - leaving an invisible-but-still-flex overlay
+   that intercepts clicks across the whole page even while "hidden". */
+
+.admin-modal {
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    width: 100%;
+    max-width: 520px;
+}
+
+.admin-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--line);
+}
+
+.admin-modal-header h3 {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.admin-modal-close {
+    border: none;
+    background: none;
+    font-size: 22px;
+    line-height: 1;
+    color: var(--ink-faint);
+    cursor: pointer;
+    padding: 4px;
+}
+
+.admin-modal-close:hover {
+    color: var(--ink);
+}
+
+.admin-modal-fields {
+    padding: 20px 24px 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+.admin-field label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink-soft);
+    margin-bottom: 6px;
+}
+
+.admin-field input,
+.admin-field select,
+.admin-field textarea {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1.5px solid var(--line-strong);
+    border-radius: var(--radius-sm);
+    background: var(--paper);
+    color: var(--ink);
+    font-size: 14.5px;
+    font-family: inherit;
+}
+
+.admin-field textarea {
+    min-height: 72px;
+    resize: vertical;
+}
+
+.admin-field input:focus,
+.admin-field select:focus,
+.admin-field textarea:focus {
+    outline: none;
+    border-color: var(--teal);
+}
+
+.admin-modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 20px 24px;
+}
+
 @media (max-width: 700px) {
     .admin-header {
         padding: 14px 18px;
@@ -272,5 +395,9 @@
 
     .admin-content {
         padding: 18px;
+    }
+
+    .admin-modal-overlay {
+        padding: 20px 12px;
     }
 }
