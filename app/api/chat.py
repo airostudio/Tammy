@@ -19,7 +19,7 @@ async def chat(request: ChatRequest, db: AsyncSession = Depends(get_db)):
     """Chat with Tammy AI assistant"""
     try:
         # Process the message
-        response = await assistant.process_message(request.message, request.context)
+        response = await assistant.process_message(request.message, db, request.context)
 
         return ChatResponse(
             response=response["response"],

@@ -18,7 +18,7 @@ class IntentParser:
             r"arrange.*(?:meeting|appointment)",
         ],
         "check_calendar": [
-            r"what.*(?:appointments?|meetings?|schedule)",
+            r"what.*(?:appointments?|meetings?|schedule|calendar)",
             r"show.*(?:appointments?|meetings?|calendar)",
             r"when.*(?:next|free|available)",
             r"(?:am i|what's) free",
@@ -76,6 +76,8 @@ class IntentParser:
         "sunday": r"\bsunday\b",
     }
 
+    _WEEKDAYS = {"monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"}
+
     @staticmethod
     def parse(message: str) -> Dict[str, Any]:
         """Parse user message and extract intent and entities"""
@@ -84,8 +86,10 @@ class IntentParser:
         # Detect intent
         intent = IntentParser._detect_intent(message_lower)
 
-        # Extract entities based on intent
-        entities = IntentParser._extract_entities(message_lower, intent)
+        # Extract entities. Most patterns are case-insensitive and work fine
+        # against the lowercased message, but name extraction needs the
+        # original casing (a lowercased "john" never matches [A-Z][a-z]+).
+        entities = IntentParser._extract_entities(message, message_lower, intent)
 
         # Calculate confidence (simple heuristic)
         confidence = IntentParser._calculate_confidence(message_lower, intent, entities)
@@ -107,7 +111,7 @@ class IntentParser:
         return "unknown"
 
     @staticmethod
-    def _extract_entities(message: str, intent: str) -> Dict[str, Any]:
+    def _extract_entities(original_message: str, message: str, intent: str) -> Dict[str, Any]:
         """Extract relevant entities from the message"""
         entities = {}
 
@@ -116,8 +120,19 @@ class IntentParser:
         if time_info:
             entities.update(time_info)
 
-        # Extract names (simple pattern - words starting with capitals)
-        names = re.findall(r"\b([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)\b", message)
+        # Extract names (simple pattern - words starting with capitals) from
+        # the ORIGINAL message, not the lowercased one - a name can't survive
+        # .lower(). Skip the sentence-leading word (capitalized purely by
+        # English convention, e.g. "Schedule...") and weekday names, which
+        # otherwise get swept up as false-positive "names".
+        names = []
+        for match in re.finditer(r"\b([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)\b", original_message):
+            if match.start() == 0:
+                continue
+            candidate = match.group(1)
+            if candidate.lower() in IntentParser._WEEKDAYS:
+                continue
+            names.append(candidate)
         if names:
             entities["names"] = names
 
