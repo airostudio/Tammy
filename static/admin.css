@@ -384,6 +384,63 @@
     padding: 20px 24px;
 }
 
+/* Calendar settings panel */
+
+.admin-calendar-section {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    padding: 24px;
+    margin-bottom: 20px;
+}
+
+.admin-calendar-section h3 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.admin-calendar-hint {
+    color: var(--ink-soft);
+    font-size: 13.5px;
+    margin-bottom: 16px;
+}
+
+.admin-feed-row {
+    display: flex;
+    gap: 10px;
+}
+
+.admin-feed-row input {
+    flex: 1;
+    padding: 10px 14px;
+    border: 1.5px solid var(--line-strong);
+    border-radius: var(--radius-sm);
+    background: var(--paper);
+    color: var(--ink);
+    font-size: 13.5px;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+}
+
+.admin-calendar-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px 0;
+    border-top: 1px solid var(--line);
+}
+
+.admin-calendar-card:first-of-type {
+    border-top: none;
+}
+
+.admin-calendar-card-title {
+    font-weight: 600;
+    font-size: 14.5px;
+    margin-bottom: 6px;
+}
+
 @media (max-width: 700px) {
     .admin-header {
         padding: 14px 18px;

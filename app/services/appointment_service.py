@@ -6,6 +6,7 @@ from datetime import datetime, timedelta
 from typing import List, Optional
 import uuid
 
+from app.calendar_sync.sync import sync_appointment_created, sync_appointment_deleted, sync_appointment_updated
 from app.models.appointment import Appointment
 from app.schemas.appointment import AppointmentCreate, AppointmentUpdate
 
@@ -37,6 +38,7 @@ class AppointmentService:
         db.add(db_appointment)
         await db.commit()
         await db.refresh(db_appointment)
+        await sync_appointment_created(db, db_appointment)
         return db_appointment
 
     @staticmethod
@@ -89,6 +91,7 @@ class AppointmentService:
 
         await db.commit()
         await db.refresh(db_appointment)
+        await sync_appointment_updated(db, db_appointment)
         return db_appointment
 
     @staticmethod
@@ -98,6 +101,7 @@ class AppointmentService:
         if not db_appointment:
             return False
 
+        await sync_appointment_deleted(db, db_appointment)
         await db.delete(db_appointment)
         await db.commit()
         return True
@@ -172,4 +176,5 @@ class AppointmentService:
 
         await db.commit()
         await db.refresh(db_appointment)
+        await sync_appointment_updated(db, db_appointment)
         return db_appointment

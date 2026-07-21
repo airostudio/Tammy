@@ -4,7 +4,9 @@ tables that already exist in a live database."""
 
 from datetime import datetime, timezone
 from types import SimpleNamespace
+from urllib.parse import parse_qs, urlparse
 
+import httpx
 import pytest
 from httpx import ASGITransport, AsyncClient
 from sqlalchemy import inspect, text
@@ -137,5 +139,105 @@ class TestCalendarFeedEndpoint:
 
                 wrong_token = await anon_client.get("/api/calendar/feed/not-the-real-token.ics")
                 assert wrong_token.status_code == 404
+
+        get_settings.cache_clear()
+
+
+@pytest.mark.asyncio
+class TestCalendarOAuthFlow:
+    """End-to-end connect -> callback -> list -> disconnect, with Google's
+    real endpoints faked. Only httpx calls to Google's own domains are
+    intercepted - the test client's calls to our own app (also made via
+    httpx.AsyncClient, over the ASGI transport) must pass through
+    untouched, or the test would be faking its own requests to itself."""
+
+    async def test_full_connect_and_disconnect_flow(self, monkeypatch):
+        monkeypatch.setenv("ADMIN_PASSWORD", "test1234")
+        monkeypatch.setenv("GOOGLE_CLIENT_ID", "test-client-id")
+        monkeypatch.setenv("GOOGLE_CLIENT_SECRET", "test-secret")
+        monkeypatch.setenv("PUBLIC_BASE_URL", "https://tammy.example.com")
+        from app.config import get_settings
+        get_settings.cache_clear()
+
+        original_post = httpx.AsyncClient.post
+        original_get = httpx.AsyncClient.get
+
+        async def dispatching_post(self, url, *args, **kwargs):
+            if isinstance(url, str) and "oauth2.googleapis.com" in url:
+                return httpx.Response(
+                    200,
+                    json={"access_token": "fake-access", "refresh_token": "fake-refresh", "expires_in": 3600},
+                    request=httpx.Request("POST", url),
+                )
+            return await original_post(self, url, *args, **kwargs)
+
+        async def dispatching_get(self, url, *args, **kwargs):
+            if isinstance(url, str) and "openidconnect.googleapis.com" in url:
+                return httpx.Response(200, json={"email": "owner@example.com"})
+            return await original_get(self, url, *args, **kwargs)
+
+        monkeypatch.setattr(httpx.AsyncClient, "post", dispatching_post)
+        monkeypatch.setattr(httpx.AsyncClient, "get", dispatching_get)
+
+        transport = ASGITransport(app=app)
+        async with app.router.lifespan_context(app):
+            async with AsyncClient(transport=transport, base_url="http://test") as client:
+                login = await client.post("/api/admin/login", json={"password": "test1234"})
+                assert login.status_code == 200
+
+                connect = await client.get("/api/calendar/oauth/google/connect", follow_redirects=False)
+                assert connect.status_code in (302, 307)
+                authorize_url = connect.headers["location"]
+                assert authorize_url.startswith("https://accounts.google.com")
+                state = parse_qs(urlparse(authorize_url).query)["state"][0]
+
+                callback = await client.get(
+                    f"/api/calendar/oauth/google/callback?code=fake-code&state={state}",
+                    follow_redirects=False,
+                )
+                assert callback.status_code in (302, 307)
+
+                connections = await client.get("/api/calendar/connections")
+                assert connections.status_code == 200
+                data = connections.json()
+                assert len(data) == 1
+                assert data[0]["provider"] == "google"
+                assert data[0]["account_email"] == "owner@example.com"
+
+                disconnect = await client.delete("/api/calendar/connections/google")
+                assert disconnect.status_code == 200
+
+                connections_after = await client.get("/api/calendar/connections")
+                assert connections_after.json() == []
+
+        get_settings.cache_clear()
+
+    async def test_callback_rejects_forged_state(self, monkeypatch):
+        monkeypatch.setenv("ADMIN_PASSWORD", "test1234")
+        monkeypatch.setenv("GOOGLE_CLIENT_ID", "test-client-id")
+        from app.config import get_settings
+        get_settings.cache_clear()
+
+        transport = ASGITransport(app=app)
+        async with app.router.lifespan_context(app):
+            async with AsyncClient(transport=transport, base_url="http://test") as client:
+                response = await client.get(
+                    "/api/calendar/oauth/google/callback?code=fake-code&state=not-a-real-token",
+                    follow_redirects=False,
+                )
+                assert response.status_code == 400
+
+        get_settings.cache_clear()
+
+    async def test_connect_requires_admin_session(self, monkeypatch):
+        monkeypatch.setenv("ADMIN_PASSWORD", "test1234")
+        from app.config import get_settings
+        get_settings.cache_clear()
+
+        transport = ASGITransport(app=app)
+        async with app.router.lifespan_context(app):
+            async with AsyncClient(transport=transport, base_url="http://test") as client:
+                response = await client.get("/api/calendar/oauth/google/connect", follow_redirects=False)
+                assert response.status_code == 401
 
         get_settings.cache_clear()

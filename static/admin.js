@@ -254,19 +254,34 @@
         return 'Could not save. Please check the fields and try again.';
     }
 
+    // "calendar" isn't a data table like the others - it's a settings panel
+    // (feed URL + connected-calendar status), so it's kept out of RESOURCES
+    // and handled as a special tab.
+    const SPECIAL_TABS = { calendar: 'Calendar' };
+
     function renderTabs() {
         tabsEl.innerHTML = '';
-        Object.keys(RESOURCES).forEach((key) => {
+        const allTabs = Object.assign({}, RESOURCES, SPECIAL_TABS);
+        Object.keys(allTabs).forEach((key) => {
             const btn = document.createElement('button');
             btn.className = 'admin-tab' + (key === activeTab ? ' active' : '');
-            btn.textContent = RESOURCES[key].label;
+            btn.textContent = RESOURCES[key] ? RESOURCES[key].label : SPECIAL_TABS[key];
             btn.onclick = () => {
                 activeTab = key;
                 renderTabs();
-                loadPanel();
+                loadActiveTab();
             };
             tabsEl.appendChild(btn);
         });
+        newButton.hidden = activeTab === 'calendar';
+    }
+
+    function loadActiveTab() {
+        if (activeTab === 'calendar') {
+            loadCalendarPanel();
+        } else {
+            loadPanel();
+        }
     }
 
     async function loadPanel() {
@@ -339,6 +354,129 @@
                 }
             });
         });
+    }
+
+    // --- Calendar settings panel -----------------------------------------
+
+    const CALENDAR_PROVIDERS = [
+        { key: 'google', label: 'Google Calendar' },
+        { key: 'microsoft', label: 'Microsoft 365 / Outlook' },
+    ];
+
+    async function loadCalendarPanel() {
+        panelTitle.textContent = 'Calendar';
+        panelBody.innerHTML = '<p class="admin-empty">Loading…</p>';
+
+        try {
+            const [feedResponse, connectionsResponse] = await Promise.all([
+                apiFetch('/api/calendar/feed-url'),
+                apiFetch('/api/calendar/connections'),
+            ]);
+            if (!feedResponse.ok || !connectionsResponse.ok) throw new Error('Failed to load');
+
+            const feedData = await feedResponse.json();
+            const connections = await connectionsResponse.json();
+            renderCalendarPanel(feedData, connections);
+        } catch (err) {
+            if (err.message !== 'Not authenticated') {
+                panelBody.innerHTML = '<p class="admin-empty">Could not load calendar settings. Try refreshing.</p>';
+            }
+        }
+    }
+
+    function renderCalendarPanel(feedData, connections) {
+        const feedUrl = window.location.origin + feedData.path;
+        const byProvider = {};
+        connections.forEach((c) => { byProvider[c.provider] = c; });
+
+        panelBody.innerHTML = '';
+
+        const feedSection = document.createElement('div');
+        feedSection.className = 'admin-calendar-section';
+        feedSection.innerHTML = `
+            <h3>Subscribe by URL (iCal)</h3>
+            <p class="admin-calendar-hint">Any calendar app can subscribe to this URL to see your appointments - no account connection needed.</p>
+        `;
+        const feedRow = document.createElement('div');
+        feedRow.className = 'admin-feed-row';
+        const feedInput = document.createElement('input');
+        feedInput.type = 'text';
+        feedInput.readOnly = true;
+        feedInput.value = feedUrl;
+        const copyBtn = document.createElement('button');
+        copyBtn.className = 'btn btn-secondary';
+        copyBtn.type = 'button';
+        copyBtn.textContent = 'Copy';
+        copyBtn.addEventListener('click', () => {
+            navigator.clipboard.writeText(feedUrl).then(() => {
+                const original = copyBtn.textContent;
+                copyBtn.textContent = 'Copied!';
+                setTimeout(() => { copyBtn.textContent = original; }, 1500);
+            });
+        });
+        feedRow.appendChild(feedInput);
+        feedRow.appendChild(copyBtn);
+        feedSection.appendChild(feedRow);
+        panelBody.appendChild(feedSection);
+
+        const connectSection = document.createElement('div');
+        connectSection.className = 'admin-calendar-section';
+        const heading = document.createElement('h3');
+        heading.textContent = 'Connected calendars';
+        const hint = document.createElement('p');
+        hint.className = 'admin-calendar-hint';
+        hint.textContent = 'Connect Google Calendar or Microsoft 365 to have new appointments pushed there automatically.';
+        connectSection.appendChild(heading);
+        connectSection.appendChild(hint);
+
+        CALENDAR_PROVIDERS.forEach(({ key, label }) => {
+            const connection = byProvider[key];
+            const card = document.createElement('div');
+            card.className = 'admin-calendar-card';
+
+            const info = document.createElement('div');
+            const title = document.createElement('div');
+            title.className = 'admin-calendar-card-title';
+            title.textContent = label;
+            info.appendChild(title);
+
+            const status = document.createElement('span');
+            status.className = 'admin-pill' + (connection ? '' : ' is-muted');
+            status.textContent = connection
+                ? `Connected${connection.account_email ? ' as ' + connection.account_email : ''}`
+                : 'Not connected';
+            info.appendChild(status);
+            card.appendChild(info);
+
+            if (connection) {
+                const disconnectBtn = document.createElement('button');
+                disconnectBtn.className = 'admin-action-btn is-danger';
+                disconnectBtn.type = 'button';
+                disconnectBtn.textContent = 'Disconnect';
+                disconnectBtn.addEventListener('click', async () => {
+                    if (!window.confirm(`Disconnect ${label}?`)) return;
+                    disconnectBtn.disabled = true;
+                    try {
+                        await apiFetch(`/api/calendar/connections/${key}`, { method: 'DELETE' });
+                        loadCalendarPanel();
+                    } catch (err) {
+                        disconnectBtn.disabled = false;
+                        window.alert('Could not disconnect. Please try again.');
+                    }
+                });
+                card.appendChild(disconnectBtn);
+            } else {
+                const connectLink = document.createElement('a');
+                connectLink.className = 'btn btn-secondary';
+                connectLink.href = `/api/calendar/oauth/${key}/connect`;
+                connectLink.textContent = 'Connect';
+                card.appendChild(connectLink);
+            }
+
+            connectSection.appendChild(card);
+        });
+
+        panelBody.appendChild(connectSection);
     }
 
     // --- Create/edit modal ---------------------------------------------
@@ -495,8 +633,13 @@
     function showDashboard() {
         loginScreen.hidden = true;
         dashboard.hidden = false;
+        // The OAuth callback redirects back to /admin#calendar so the user
+        // lands back on the tab they started from.
+        if (window.location.hash === '#calendar') {
+            activeTab = 'calendar';
+        }
         renderTabs();
-        loadPanel();
+        loadActiveTab();
     }
 
     async function checkSession() {
@@ -547,7 +690,7 @@
         showLogin();
     });
 
-    refreshButton.addEventListener('click', loadPanel);
+    refreshButton.addEventListener('click', loadActiveTab);
 
     checkSession();
 })();
