@@ -78,7 +78,12 @@ export default function Home() {
       <nav className="sticky top-0 z-40 border-b border-line bg-paper/90 backdrop-blur-sm">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-6 px-6 py-4">
           <Link href="#" className="flex items-center">
-            <Image src={logo} alt="ENDCOM.NET" className="h-9 w-auto" priority />
+            <Image
+              src={logo}
+              alt="ENDCOM.NET"
+              className="h-20 w-auto rounded-xl bg-black/55 p-2"
+              priority
+            />
           </Link>
           <ul className="hidden items-center gap-7 md:flex">
             <li>

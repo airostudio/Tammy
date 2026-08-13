@@ -42,7 +42,9 @@
 }
 
 .brand-logo-lg {
-    height: 56px;
+    height: 128px;
+    padding: 12px;
+    border-radius: 16px;
 }
 
 .admin-login-card h1 {

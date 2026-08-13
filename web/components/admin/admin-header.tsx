@@ -30,7 +30,12 @@ export function AdminHeader() {
     <>
       <header className="flex items-center gap-5 border-b border-line bg-surface px-7 py-4">
         <Link href="/admin" className="flex items-center gap-2">
-          <Image src={logo} alt="ENDCOM.NET" className="h-7.5 w-auto" priority />
+          <Image
+            src={logo}
+            alt="ENDCOM.NET"
+            className="h-[72px] w-auto rounded-lg bg-black/55 p-1.5"
+            priority
+          />
           <span className="text-sm font-medium text-ink-soft">Admin</span>
         </Link>
         <Link href="/" className="ml-auto text-sm text-ink-soft hover:text-teal-deep">

@@ -38,7 +38,12 @@ function LoginForm() {
         onSubmit={handleSubmit}
         className="w-full max-w-sm flex flex-col items-center gap-3.5 rounded-2xl border border-line bg-surface p-10 text-center shadow-xl"
       >
-        <Image src={logo} alt="ENDCOM.NET" className="h-14 w-auto" priority />
+        <Image
+          src={logo}
+          alt="ENDCOM.NET"
+          className="h-32 w-auto rounded-2xl bg-black/55 p-3"
+          priority
+        />
         <h1 className="font-serif text-lg italic font-semibold text-ink-soft">Admin</h1>
         <p className="mb-2 text-sm text-ink-soft">Sign in to view the front desk data.</p>
 
