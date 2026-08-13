@@ -1,4 +1,4 @@
-"""Main FastAPI application for Tammy AI Assistant"""
+"""Main FastAPI application for ENDCOM.NET AI Assistant"""
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -39,7 +39,7 @@ logger = logging.getLogger(__name__)
 async def lifespan(app: FastAPI):
     """Application lifespan manager"""
     # Startup
-    logger.info("Starting Tammy AI Assistant...")
+    logger.info("Starting ENDCOM.NET AI Assistant...")
     try:
         await init_db()
         logger.info("Database initialized")
@@ -50,7 +50,7 @@ async def lifespan(app: FastAPI):
         logger.exception("Database initialization failed - continuing without a working database")
     yield
     # Shutdown
-    logger.info("Shutting down Tammy AI Assistant...")
+    logger.info("Shutting down ENDCOM.NET AI Assistant...")
     try:
         await close_db()
     except Exception:
@@ -62,7 +62,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title=settings.app_name,
     version=settings.app_version,
-    description="Tammy - AI Virtual Executive Assistant & Receptionist",
+    description="ENDCOM.NET - AI Virtual Executive Assistant & Receptionist",
     lifespan=lifespan,
 )
 
@@ -95,7 +95,7 @@ async def root():
     else:
         # Fallback to JSON response
         return {
-            "message": "Welcome to Tammy AI Assistant!",
+            "message": "Welcome to ENDCOM.NET AI Assistant!",
             "version": settings.app_version,
             "status": "running",
             "docs": "/docs",

@@ -41,7 +41,7 @@ class TestIcsExport:
         assert "SUMMARY:Team sync" in ics
         assert "DTSTART:20260801T140000Z" in ics
         assert "DTEND:20260801T143000Z" in ics
-        assert "UID:abc123@tammy" in ics
+        assert "UID:abc123@endcom.net" in ics
 
     def test_cancelled_appointment_marked_cancelled(self):
         ics = generate_ics_feed([_fake_appointment(status="cancelled")])

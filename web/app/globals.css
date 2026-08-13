@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 /* ---------------------------------------------------------------
-   Tammy design tokens - the "front desk" concierge system:
+   ENDCOM.NET design tokens - the "front desk" concierge system:
    sage-tinted paper, deep teal accent, sparing brass accent.
    See the FastAPI-served site's static/style.css for the original -
    these are the same values, ported here as CSS custom properties

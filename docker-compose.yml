@@ -1,9 +1,9 @@
 version: '3.8'
 
 services:
-  tammy:
+  endcom-net:
     build: .
-    container_name: tammy-assistant
+    container_name: endcom-net-assistant
     ports:
       - "8000:8000"
     environment:

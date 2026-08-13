@@ -1,4 +1,4 @@
-// Tammy admin dashboard - data-driven table + create/edit forms over the
+// ENDCOM.NET admin dashboard - data-driven table + create/edit forms over the
 // existing appointments/tasks/contacts/visitors/messages API, gated by the
 // admin session cookie (see app/api/admin.py, app/api/deps.py).
 

@@ -1,6 +1,6 @@
-# Tammy - AI Virtual Executive Assistant & Receptionist
+# ENDCOM.NET - AI Virtual Executive Assistant & Receptionist
 
-Tammy is a comprehensive AI-powered virtual assistant that combines the capabilities of an executive assistant and receptionist into one intelligent bot.
+Tammy is the AI-powered virtual assistant at the heart of ENDCOM.NET, combining the capabilities of an executive assistant and receptionist into one intelligent bot.
 
 ## Features
 

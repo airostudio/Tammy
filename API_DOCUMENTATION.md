@@ -1,4 +1,4 @@
-# Tammy AI Assistant - API Documentation
+# ENDCOM.NET AI Assistant - API Documentation
 
 ## Base URL
 

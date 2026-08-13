@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "======================================"
-echo "  Tammy AI Assistant - Startup Script"
+echo "  ENDCOM.NET AI Assistant - Startup Script"
 echo "======================================"
 echo ""
 
@@ -38,7 +38,7 @@ python -c "import asyncio; from app.database import init_db; asyncio.run(init_db
 echo ""
 echo "✅ Setup complete!"
 echo ""
-echo "To start Tammy, run:"
+echo "To start the backend, run:"
 echo "  python -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000"
 echo ""
 echo "Or use: make run"

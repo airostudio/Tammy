@@ -1,4 +1,4 @@
-"""Example usage of Tammy AI Assistant API"""
+"""Example usage of ENDCOM.NET AI Assistant API"""
 
 import asyncio
 import httpx
@@ -144,7 +144,7 @@ async def example_visitors():
 async def main():
     """Run all examples"""
     print("=" * 50)
-    print("Tammy AI Assistant - Example Usage")
+    print("ENDCOM.NET AI Assistant - Example Usage")
     print("=" * 50)
 
     try:
@@ -158,7 +158,7 @@ async def main():
         print("All examples completed!")
         print("=" * 50)
     except httpx.ConnectError:
-        print("\nError: Could not connect to Tammy API.")
+        print("\nError: Could not connect to ENDCOM.NET API.")
         print("Make sure the server is running: python -m uvicorn app.main:app --reload")
 
 

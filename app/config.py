@@ -9,7 +9,7 @@ class Settings(BaseSettings):
     """Application settings"""
 
     # Application
-    app_name: str = "Tammy AI Assistant"
+    app_name: str = "ENDCOM.NET AI Assistant"
     app_version: str = "1.0.0"
     debug: bool = True
     api_host: str = "0.0.0.0"

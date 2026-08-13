@@ -1,12 +1,12 @@
-# Deployment Guide - Tammy AI Assistant
+# Deployment Guide - ENDCOM.NET AI Assistant
 
-This guide covers different deployment options for Tammy.
+This guide covers different deployment options for ENDCOM.NET.
 
 ## 🚀 Quick Deploy Options
 
 ### Option 1: Vercel (Recommended for Web Access)
 
-Tammy is configured for Vercel deployment with both API and web interface.
+ENDCOM.NET is configured for Vercel deployment with both API and web interface.
 
 **Deploy to Vercel:**
 
@@ -45,15 +45,15 @@ docker-compose up -d
 **Custom Docker Deployment:**
 ```bash
 # Build
-docker build -t tammy-ai .
+docker build -t endcom-net-ai .
 
 # Run
 docker run -d \
   -p 8000:8000 \
   -v $(pwd)/data:/app/data \
   -e SECRET_KEY=your-secret-key \
-  --name tammy \
-  tammy-ai
+  --name endcom-net \
+  endcom-net-ai
 ```
 
 ### Option 3: Railway
@@ -88,14 +88,14 @@ Use the Docker image or deploy as a containerized application.
 
 **AWS Elastic Beanstalk:**
 ```bash
-eb init -p docker tammy-ai
-eb create tammy-env
+eb init -p docker endcom-net-ai
+eb create endcom-net-env
 eb deploy
 ```
 
 **Google Cloud Run:**
 ```bash
-gcloud run deploy tammy \
+gcloud run deploy endcom-net \
   --source . \
   --platform managed \
   --region us-central1 \
@@ -122,13 +122,13 @@ cd Tammy
 
 4. **Set up as a service (systemd):**
 ```bash
-sudo nano /etc/systemd/system/tammy.service
+sudo nano /etc/systemd/system/endcom-net.service
 ```
 
 Add:
 ```ini
 [Unit]
-Description=Tammy AI Assistant
+Description=ENDCOM.NET AI Assistant
 After=network.target
 
 [Service]
@@ -145,8 +145,8 @@ WantedBy=multi-user.target
 
 5. **Start service:**
 ```bash
-sudo systemctl enable tammy
-sudo systemctl start tammy
+sudo systemctl enable endcom-net
+sudo systemctl start endcom-net
 ```
 
 6. **Set up Nginx reverse proxy:**
@@ -249,10 +249,10 @@ sudo certbot --nginx -d your-domain.com
 tail -f logs/tammy.log
 
 # With Docker
-docker logs -f tammy
+docker logs -f endcom-net-assistant
 
 # With systemd
-sudo journalctl -u tammy -f
+sudo journalctl -u endcom-net -f
 ```
 
 ### Health Check Endpoint
@@ -324,7 +324,7 @@ jobs:
 ### Docker Issues
 
 **Problem:** Container exits immediately
-**Solution:** Check logs with `docker logs tammy`
+**Solution:** Check logs with `docker logs endcom-net-assistant`
 
 **Problem:** Can't connect to database
 **Solution:** Ensure database service is running and connection string is correct

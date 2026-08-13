@@ -37,9 +37,9 @@ function LoginForm() {
         className="w-full max-w-sm flex flex-col items-center gap-3.5 rounded-2xl border border-line bg-surface p-10 text-center shadow-xl"
       >
         <span className="flex h-11 w-11 items-center justify-center rounded-full bg-teal font-serif text-xl italic text-surface">
-          T
+          E
         </span>
-        <h1 className="font-serif text-2xl italic font-semibold">Tammy Admin</h1>
+        <h1 className="font-serif text-2xl italic font-semibold">ENDCOM.NET Admin</h1>
         <p className="mb-2 text-sm text-ink-soft">Sign in to view the front desk data.</p>
 
         <input

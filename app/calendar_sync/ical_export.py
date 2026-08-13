@@ -45,7 +45,7 @@ def generate_ics_feed(appointments: Iterable) -> str:
     lines = [
         "BEGIN:VCALENDAR",
         "VERSION:2.0",
-        "PRODID:-//Tammy AI Assistant//Calendar Feed//EN",
+        "PRODID:-//ENDCOM.NET AI Assistant//Calendar Feed//EN",
         "CALSCALE:GREGORIAN",
         "METHOD:PUBLISH",
     ]
@@ -54,7 +54,7 @@ def generate_ics_feed(appointments: Iterable) -> str:
 
     for appointment in appointments:
         lines.append("BEGIN:VEVENT")
-        lines.append(_fold_line(f"UID:{appointment.id}@tammy"))
+        lines.append(_fold_line(f"UID:{appointment.id}@endcom.net"))
         lines.append(f"DTSTAMP:{now}")
         lines.append(f"DTSTART:{_format_dt(appointment.start_time)}")
         lines.append(f"DTEND:{_format_dt(appointment.end_time)}")

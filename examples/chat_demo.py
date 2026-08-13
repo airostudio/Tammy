@@ -7,7 +7,7 @@ import httpx
 async def chat_with_tammy():
     """Interactive chat session with Tammy"""
     print("=" * 60)
-    print("Welcome to Tammy AI Assistant - Interactive Chat Demo")
+    print("Welcome to ENDCOM.NET AI Assistant - Interactive Chat Demo")
     print("=" * 60)
     print("\nType 'quit' or 'exit' to end the conversation")
     print("Type 'help' to see what Tammy can do\n")
@@ -47,7 +47,7 @@ async def chat_with_tammy():
                     print(f"\nError: {response.status_code} - {response.text}")
 
             except httpx.ConnectError:
-                print("\nError: Could not connect to Tammy.")
+                print("\nError: Could not connect to ENDCOM.NET.")
                 print("Make sure the server is running: python -m uvicorn app.main:app --reload")
                 break
             except KeyboardInterrupt:

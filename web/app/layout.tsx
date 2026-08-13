@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Tammy - AI Virtual Executive Assistant & Receptionist",
+  title: "ENDCOM.NET - AI Virtual Executive Assistant & Receptionist",
   description:
-    "Tammy answers your calls, manages your calendar, and keeps your front desk running - a virtual executive assistant and receptionist for growing businesses.",
+    "ENDCOM.NET's virtual assistant Tammy answers your calls, manages your calendar, and keeps your front desk running - a virtual executive assistant and receptionist for growing businesses.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

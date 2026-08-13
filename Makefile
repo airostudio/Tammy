@@ -1,7 +1,7 @@
 .PHONY: help install run test clean docker-build docker-up docker-down format lint
 
 help:
-	@echo "Tammy AI Assistant - Available Commands"
+	@echo "ENDCOM.NET AI Assistant - Available Commands"
 	@echo "========================================"
 	@echo "install       - Install dependencies"
 	@echo "run           - Run the development server"

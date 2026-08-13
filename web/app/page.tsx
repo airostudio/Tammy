@@ -77,9 +77,9 @@ export default function Home() {
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-6 px-6 py-4">
           <Link href="#" className="flex items-center gap-2.5 text-[22px] font-semibold">
             <span className="flex h-8.5 w-8.5 items-center justify-center rounded-full bg-teal font-serif text-lg italic text-surface">
-              T
+              E
             </span>
-            <span className="font-serif italic">Tammy</span>
+            <span className="font-serif italic">ENDCOM.NET</span>
           </Link>
           <ul className="hidden items-center gap-7 md:flex">
             <li>
@@ -240,10 +240,10 @@ export default function Home() {
                 For developers
               </span>
               <h2 className="mb-3.5 text-[clamp(1.75rem,3vw,2.25rem)] font-semibold">
-                Integrate Tammy into your own tools
+                Integrate ENDCOM.NET into your own tools
               </h2>
               <p className="text-[16.5px] text-ink-soft">
-                A straightforward REST API - bring Tammy into whatever your team already uses.
+                A straightforward REST API - bring ENDCOM.NET into whatever your team already uses.
               </p>
             </div>
 
@@ -321,7 +321,7 @@ export default function Home() {
       <footer className="border-t border-line py-10">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-6">
           <p className="text-sm text-ink-faint">
-            &copy; {new Date().getFullYear()} Tammy AI Assistant. Open source under the MIT License.
+            &copy; {new Date().getFullYear()} ENDCOM.NET. Open source under the MIT License.
           </p>
           <div className="flex gap-6">
             <a

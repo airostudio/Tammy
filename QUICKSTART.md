@@ -1,6 +1,6 @@
-# Quick Start Guide - Tammy AI Assistant
+# Quick Start Guide - ENDCOM.NET AI Assistant
 
-Get Tammy up and running in 5 minutes!
+Get ENDCOM.NET up and running in 5 minutes!
 
 ## Prerequisites
 
@@ -45,7 +45,7 @@ cp .env.example .env
 mkdir -p data logs
 ```
 
-## Running Tammy
+## Running ENDCOM.NET
 
 ### Start the Server
 

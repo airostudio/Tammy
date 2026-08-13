@@ -1,1 +1,1 @@
-"""Tests for Tammy AI Assistant"""
+"""Tests for ENDCOM.NET AI Assistant"""

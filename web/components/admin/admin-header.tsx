@@ -29,9 +29,9 @@ export function AdminHeader() {
       <header className="flex items-center gap-5 border-b border-line bg-surface px-7 py-4">
         <Link href="/admin" className="flex items-center gap-2.5 text-lg font-semibold">
           <span className="flex h-7.5 w-7.5 items-center justify-center rounded-full bg-teal font-serif text-sm italic text-surface">
-            T
+            E
           </span>
-          <span className="font-serif italic">Tammy Admin</span>
+          <span className="font-serif italic">ENDCOM.NET Admin</span>
         </Link>
         <Link href="/" className="ml-auto text-sm text-ink-soft hover:text-teal-deep">
           View site

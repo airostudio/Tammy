@@ -1,3 +1,3 @@
-"""Tammy AI Virtual Assistant & Receptionist"""
+"""ENDCOM.NET AI Virtual Assistant & Receptionist"""
 
 __version__ = "1.0.0"

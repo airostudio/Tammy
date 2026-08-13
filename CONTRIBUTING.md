@@ -1,6 +1,6 @@
-# Contributing to Tammy AI Assistant
+# Contributing to ENDCOM.NET AI Assistant
 
-Thank you for your interest in contributing to Tammy! This document provides guidelines and instructions for contributing.
+Thank you for your interest in contributing to ENDCOM.NET! This document provides guidelines and instructions for contributing.
 
 ## Getting Started
 
@@ -224,4 +224,4 @@ By contributing, you agree that your contributions will be licensed under the MI
 
 ## Thank You!
 
-Your contributions make Tammy better for everyone. We appreciate your time and effort!
+Your contributions make ENDCOM.NET better for everyone. We appreciate your time and effort!

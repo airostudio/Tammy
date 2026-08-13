@@ -1,6 +1,6 @@
 @echo off
 echo ======================================
-echo   Tammy AI Assistant - Startup Script
+echo   ENDCOM.NET AI Assistant - Startup Script
 echo ======================================
 echo.
 
@@ -34,7 +34,7 @@ if not exist "logs" mkdir logs
 echo.
 echo Setup complete!
 echo.
-echo To start Tammy, run:
+echo To start the backend, run:
 echo   python -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 echo.
 echo API Documentation will be available at:
