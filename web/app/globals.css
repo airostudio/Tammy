@@ -1,0 +1,80 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------
+   Tammy design tokens - the "front desk" concierge system:
+   sage-tinted paper, deep teal accent, sparing brass accent.
+   See the FastAPI-served site's static/style.css for the original -
+   these are the same values, ported here as CSS custom properties
+   Tailwind utilities read via @theme inline below.
+----------------------------------------------------------------*/
+
+:root {
+  --paper: #f6f7f4;
+  --surface: #ffffff;
+  --surface-sunken: #eef1ed;
+  --line: #e1e6e1;
+  --line-strong: #cdd5cd;
+
+  --ink: #1b2420;
+  --ink-soft: #52605a;
+  --ink-faint: #7c8a83;
+
+  --teal: #0e6e64;
+  --teal-deep: #0a554d;
+  --teal-tint: #e3f0ee;
+
+  --brass: #a8763a;
+  --brass-tint: #f3e9da;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 18px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #121917;
+    --surface: #1b2422;
+    --surface-sunken: #161d1b;
+    --line: #2b3733;
+    --line-strong: #3a4842;
+
+    --ink: #edefec;
+    --ink-soft: #a9b3ac;
+    --ink-faint: #7c8a83;
+
+    --teal: #3fc0ac;
+    --teal-deep: #2a9285;
+    --teal-tint: #17302c;
+
+    --brass: #d3a45e;
+    --brass-tint: #2c2417;
+  }
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-surface: var(--surface);
+  --color-surface-sunken: var(--surface-sunken);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-ink-faint: var(--ink-faint);
+
+  --color-teal: var(--teal);
+  --color-teal-deep: var(--teal-deep);
+  --color-teal-tint: var(--teal-tint);
+
+  --color-brass: var(--brass);
+  --color-brass-tint: var(--brass-tint);
+
+  --font-sans: "Work Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-serif: "Fraunces", Georgia, serif;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+}
