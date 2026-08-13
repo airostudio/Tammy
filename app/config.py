@@ -25,7 +25,17 @@ class Settings(BaseSettings):
 
     # Admin section - single shared password gating /admin and the
     # underlying data API. Empty means the admin section is disabled.
+    # This is the legacy path used by the built-in public/admin/ dashboard;
+    # the Next.js frontend (web/) instead authenticates via Supabase Auth
+    # below.
     admin_password: str = ""
+
+    # Supabase Auth - lets the Next.js frontend's Supabase session tokens
+    # authenticate against this API (see app/api/deps.py). From the
+    # Supabase Dashboard: Project Settings -> API -> JWT Settings -> JWT
+    # Secret. Leave blank to disable Supabase-token auth (admin_password
+    # above still works either way).
+    supabase_jwt_secret: str = ""
 
     # OpenAI
     openai_api_key: str = ""
