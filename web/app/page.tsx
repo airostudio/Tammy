@@ -1,4 +1,6 @@
+import Image from "next/image";
 import Link from "next/link";
+import logo from "@/public/endcom-logo.webp";
 import { ChatDemo } from "@/components/chat-demo";
 import { CopyButton } from "@/components/copy-button";
 import {
@@ -75,11 +77,8 @@ export default function Home() {
       {/* Nav */}
       <nav className="sticky top-0 z-40 border-b border-line bg-paper/90 backdrop-blur-sm">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-6 px-6 py-4">
-          <Link href="#" className="flex items-center gap-2.5 text-[22px] font-semibold">
-            <span className="flex h-8.5 w-8.5 items-center justify-center rounded-full bg-teal font-serif text-lg italic text-surface">
-              E
-            </span>
-            <span className="font-serif italic">ENDCOM.NET</span>
+          <Link href="#" className="flex items-center">
+            <Image src={logo} alt="ENDCOM.NET" className="h-9 w-auto" priority />
           </Link>
           <ul className="hidden items-center gap-7 md:flex">
             <li>

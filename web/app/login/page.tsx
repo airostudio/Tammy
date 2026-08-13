@@ -1,7 +1,9 @@
 "use client";
 
 import { useState, Suspense } from "react";
+import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
+import logo from "@/public/endcom-logo.webp";
 import { createClient } from "@/lib/supabase/client";
 
 function LoginForm() {
@@ -36,10 +38,8 @@ function LoginForm() {
         onSubmit={handleSubmit}
         className="w-full max-w-sm flex flex-col items-center gap-3.5 rounded-2xl border border-line bg-surface p-10 text-center shadow-xl"
       >
-        <span className="flex h-11 w-11 items-center justify-center rounded-full bg-teal font-serif text-xl italic text-surface">
-          E
-        </span>
-        <h1 className="font-serif text-2xl italic font-semibold">ENDCOM.NET Admin</h1>
+        <Image src={logo} alt="ENDCOM.NET" className="h-14 w-auto" priority />
+        <h1 className="font-serif text-lg italic font-semibold text-ink-soft">Admin</h1>
         <p className="mb-2 text-sm text-ink-soft">Sign in to view the front desk data.</p>
 
         <input

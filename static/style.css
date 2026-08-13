@@ -229,6 +229,12 @@ svg {
     flex-shrink: 0;
 }
 
+.brand-logo {
+    height: 36px;
+    width: auto;
+    display: block;
+}
+
 .nav-links {
     display: flex;
     align-items: center;
