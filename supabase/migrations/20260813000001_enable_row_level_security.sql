@@ -1,6 +1,9 @@
 -- Enable Row Level Security on every table and restrict access to
 -- authenticated Supabase users only.
 --
+-- Run this AFTER 20260813000000_initial_schema.sql - it assumes every
+-- table already exists.
+--
 -- Why this matters: these tables were created by the FastAPI backend's
 -- SQLAlchemy models (Base.metadata.create_all()), not through the Supabase
 -- dashboard, so Postgres's default applies - RLS is OFF. Supabase's
@@ -20,9 +23,10 @@
 -- ever reads data directly via Realtime subscriptions instead of going
 -- through the FastAPI backend for everything.
 --
--- This app is single-tenant (one admin/staff team manages all of Tammy's
--- data - appointments/tasks/contacts/etc. all belong to a single fixed
--- "system" user, not a real per-customer owner), so the policy is simple:
+-- This app is single-tenant (one admin/staff team manages all of
+-- ENDCOM.NET's data - appointments/tasks/contacts/etc. all belong to a
+-- single fixed "system" user, not a real per-customer owner), so the
+-- policy is simple:
 -- any authenticated Supabase user (i.e. anyone who can sign in - meaning
 -- staff you've added to the Supabase project) can do anything; the public
 -- anon role can do nothing. If this ever needs to become multi-tenant,
