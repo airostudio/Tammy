@@ -81,7 +81,7 @@ export default function Home() {
             <Image
               src={logo}
               alt="ENDCOM.NET"
-              className="h-20 w-auto rounded-xl bg-black/55 p-2"
+              className="h-20 w-auto rounded-xl bg-black/70 p-2"
               priority
             />
           </Link>

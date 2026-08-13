@@ -33,7 +33,7 @@ export function AdminHeader() {
           <Image
             src={logo}
             alt="ENDCOM.NET"
-            className="h-[72px] w-auto rounded-lg bg-black/55 p-1.5"
+            className="h-[72px] w-auto rounded-lg bg-black/70 p-1.5"
             priority
           />
           <span className="text-sm font-medium text-ink-soft">Admin</span>

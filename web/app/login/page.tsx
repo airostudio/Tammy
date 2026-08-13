@@ -41,7 +41,7 @@ function LoginForm() {
         <Image
           src={logo}
           alt="ENDCOM.NET"
-          className="h-32 w-auto rounded-2xl bg-black/55 p-3"
+          className="h-32 w-auto rounded-2xl bg-black/70 p-3"
           priority
         />
         <h1 className="font-serif text-lg italic font-semibold text-ink-soft">Admin</h1>
