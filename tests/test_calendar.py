@@ -212,6 +212,31 @@ class TestCalendarOAuthFlow:
 
         get_settings.cache_clear()
 
+    async def test_connect_returns_json_for_json_accept_header(self, monkeypatch):
+        """The Next.js frontend can't follow a redirect cross-origin with its
+        Bearer token attached, so it asks for JSON and redirects itself."""
+        monkeypatch.setenv("ADMIN_PASSWORD", "test1234")
+        monkeypatch.setenv("GOOGLE_CLIENT_ID", "test-client-id")
+        from app.config import get_settings
+        get_settings.cache_clear()
+
+        transport = ASGITransport(app=app)
+        async with app.router.lifespan_context(app):
+            async with AsyncClient(transport=transport, base_url="http://test") as client:
+                login = await client.post("/api/admin/login", json={"password": "test1234"})
+                assert login.status_code == 200
+
+                response = await client.get(
+                    "/api/calendar/oauth/google/connect",
+                    headers={"Accept": "application/json"},
+                    follow_redirects=False,
+                )
+                assert response.status_code == 200
+                data = response.json()
+                assert data["authorize_url"].startswith("https://accounts.google.com")
+
+        get_settings.cache_clear()
+
     async def test_callback_rejects_forged_state(self, monkeypatch):
         monkeypatch.setenv("ADMIN_PASSWORD", "test1234")
         monkeypatch.setenv("GOOGLE_CLIENT_ID", "test-client-id")

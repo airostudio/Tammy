@@ -37,6 +37,12 @@ class Settings(BaseSettings):
     # above still works either way).
     supabase_jwt_secret: str = ""
 
+    # The deployed Next.js frontend's URL (no trailing slash), e.g.
+    # https://tammy.vercel.app. Used to send the browser back to the right
+    # place after a calendar OAuth connection completes. Leave blank to
+    # fall back to the legacy public/admin/ dashboard on this same origin.
+    frontend_url: str = ""
+
     # OpenAI
     openai_api_key: str = ""
     openai_model: str = "gpt-4-turbo-preview"

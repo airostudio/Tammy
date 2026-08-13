@@ -98,7 +98,16 @@ async def disconnect_calendar(
 
 @router.get("/oauth/{provider_name}/connect")
 async def start_oauth_connect(provider_name: str, request: Request, _admin: dict = Depends(require_admin)):
-    """Admin-only: redirects to the provider's consent screen"""
+    """Admin-only: sends the caller to the provider's consent screen.
+
+    Redirects by default, so a plain <a href> works from the
+    cookie-authenticated public/admin/ dashboard (same origin as this
+    API). Returns JSON instead when the caller sends
+    Accept: application/json - used by the Next.js frontend, which
+    authenticates with a Bearer token that a plain browser navigation
+    can't carry cross-origin, so it fetches this URL instead and
+    performs the redirect itself client-side.
+    """
     settings = get_settings()
     try:
         provider = get_calendar_provider(provider_name, settings)
@@ -107,6 +116,9 @@ async def start_oauth_connect(provider_name: str, request: Request, _admin: dict
 
     state = create_access_token({"provider": provider_name}, expires_delta=timedelta(minutes=10))
     authorize_url = provider.get_authorize_url(state, _redirect_uri(request, provider_name))
+
+    if request.headers.get("accept", "").startswith("application/json"):
+        return {"authorize_url": authorize_url}
     return RedirectResponse(authorize_url)
 
 
@@ -129,4 +141,7 @@ async def oauth_callback(
     token = await provider.exchange_code(code, _redirect_uri(request, provider_name))
     await save_calendar_connection(db, DEFAULT_USER_ID, provider_name, token)
 
+    settings = get_settings()
+    if settings.frontend_url:
+        return RedirectResponse(f"{settings.frontend_url.rstrip('/')}/admin/calendar")
     return RedirectResponse("/admin#calendar")
