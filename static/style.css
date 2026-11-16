@@ -233,9 +233,8 @@ svg {
     height: 80px;
     width: auto;
     display: block;
-    padding: 8px;
     border-radius: 12px;
-    background: rgba(0, 0, 0, 0.7);
+    border: 1px solid var(--line);
 }
 
 .nav-links {
