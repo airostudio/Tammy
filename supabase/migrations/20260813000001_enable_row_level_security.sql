@@ -36,6 +36,10 @@
 -- policies at all (not even for authenticated) - with RLS enabled and zero
 -- policies, every role is denied by default, so those tokens are only ever
 -- reachable through the FastAPI backend's direct, RLS-bypassing connection.
+-- chat_sessions gets the same treatment: it's internal bookkeeping for the
+-- unauthenticated /api/chat endpoint (which intent Tammy is mid-way through
+-- for a given session_id), nothing the Next.js admin dashboard or any
+-- Supabase client ever needs to read or write directly.
 --
 -- To apply: paste this file into the Supabase Dashboard's SQL Editor and
 -- run it, or `supabase db push` if you're using the Supabase CLI.
@@ -48,6 +52,7 @@ alter table if exists visitors enable row level security;
 alter table if exists messages enable row level security;
 alter table if exists documents enable row level security;
 alter table if exists calendar_connections enable row level security;
+alter table if exists chat_sessions enable row level security;
 
 drop policy if exists "Authenticated users can manage users" on users;
 create policy "Authenticated users can manage users" on users
@@ -77,4 +82,5 @@ drop policy if exists "Authenticated users can manage documents" on documents;
 create policy "Authenticated users can manage documents" on documents
   for all to authenticated using (true) with check (true);
 
--- calendar_connections intentionally has no policies - see comment above.
+-- calendar_connections and chat_sessions intentionally have no policies -
+-- see comment above.

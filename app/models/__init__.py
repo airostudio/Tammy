@@ -8,6 +8,7 @@ from app.models.visitor import Visitor
 from app.models.message import Message
 from app.models.document import Document
 from app.models.calendar_connection import CalendarConnection
+from app.models.chat_session import ChatSession
 
 __all__ = [
     "User",
@@ -18,4 +19,5 @@ __all__ = [
     "Message",
     "Document",
     "CalendarConnection",
+    "ChatSession",
 ]

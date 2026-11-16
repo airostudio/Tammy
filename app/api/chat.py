@@ -2,7 +2,6 @@
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
-from typing import Dict, Any
 
 from app.database import get_db
 from app.schemas.chat import ChatRequest, ChatResponse
@@ -10,16 +9,25 @@ from app.ai.assistant import TammyAssistant
 
 router = APIRouter()
 
-# Global assistant instance (in production, use session-based instances)
-assistant = TammyAssistant()
-
 
 @router.post("/", response_model=ChatResponse)
 async def chat(request: ChatRequest, db: AsyncSession = Depends(get_db)):
-    """Chat with Tammy AI assistant"""
+    """Chat with Tammy AI assistant.
+
+    A fresh assistant is created for every request - it holds no state
+    of its own. Any memory of an in-progress, not-yet-complete request
+    (e.g. "Schedule a meeting with Mike" before a date/time has been
+    given) is carried across requests via `request.session_id`, backed
+    by the chat_sessions table (see ChatSessionService) rather than a
+    Python object - the previous version of this endpoint kept a single
+    module-level TammyAssistant shared by every caller, which not only
+    couldn't survive more than one worker process but meant every
+    user's conversation state lived in the same shared instance.
+    """
     try:
-        # Process the message
-        response = await assistant.process_message(request.message, db, request.context)
+        response = await assistant_for_request().process_message(
+            request.message, db, request.context, request.session_id
+        )
 
         return ChatResponse(
             response=response["response"],
@@ -33,18 +41,9 @@ async def chat(request: ChatRequest, db: AsyncSession = Depends(get_db)):
         raise HTTPException(status_code=500, detail=f"Error processing message: {str(e)}")
 
 
-@router.get("/history")
-async def get_chat_history(session_id: str = None):
-    """Get chat history for a session"""
-    history = assistant.get_history()
-    return {"history": history}
-
-
-@router.delete("/history")
-async def clear_chat_history(session_id: str = None):
-    """Clear chat history for a session"""
-    assistant.clear_history()
-    return {"message": "Chat history cleared"}
+def assistant_for_request() -> TammyAssistant:
+    """A new assistant per request - see the chat() docstring for why."""
+    return TammyAssistant()
 
 
 @router.get("/capabilities")

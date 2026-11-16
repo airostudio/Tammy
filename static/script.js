@@ -7,6 +7,11 @@ const suggestionsContainer = document.getElementById('suggestions');
 // API endpoint (adjust based on deployment)
 const API_URL = window.location.origin + '/api/chat';
 
+// One id for this whole page load, so a follow-up answer (e.g. "Tomorrow
+// at 2pm" after Tammy asks for a date) is recognized as continuing the
+// same request rather than parsed on its own.
+const CHAT_SESSION_ID = crypto.randomUUID();
+
 // Example suggestions
 const exampleQueries = [
     "Schedule a meeting tomorrow at 2pm",
@@ -72,7 +77,7 @@ async function sendMessage() {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ message: message })
+            body: JSON.stringify({ message: message, session_id: CHAT_SESSION_ID })
         });
 
         if (!response.ok) {

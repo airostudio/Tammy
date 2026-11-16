@@ -61,6 +61,14 @@ CREATE TABLE IF NOT EXISTS public.calendar_connections (
     updated_at timestamp without time zone
 );
 
+CREATE TABLE IF NOT EXISTS public.chat_sessions (
+    id character varying NOT NULL,
+    pending_intent character varying,
+    pending_entities json,
+    pending_message character varying,
+    updated_at timestamp without time zone
+);
+
 CREATE TABLE IF NOT EXISTS public.contacts (
     id character varying NOT NULL,
     user_id character varying NOT NULL,
@@ -253,6 +261,9 @@ ALTER TABLE ONLY public.appointments
 ALTER TABLE ONLY public.calendar_connections
     ADD CONSTRAINT calendar_connections_pkey PRIMARY KEY (id);
 
+ALTER TABLE ONLY public.chat_sessions
+    ADD CONSTRAINT chat_sessions_pkey PRIMARY KEY (id);
+
 ALTER TABLE ONLY public.contacts
     ADD CONSTRAINT contacts_pkey PRIMARY KEY (id);
 
@@ -278,6 +289,8 @@ CREATE INDEX IF NOT EXISTS ix_appointments_start_time ON public.appointments USI
 
 CREATE INDEX IF NOT EXISTS ix_calendar_connections_id ON public.calendar_connections USING btree (id);
 CREATE INDEX IF NOT EXISTS ix_calendar_connections_user_id ON public.calendar_connections USING btree (user_id);
+
+CREATE INDEX IF NOT EXISTS ix_chat_sessions_id ON public.chat_sessions USING btree (id);
 
 CREATE INDEX IF NOT EXISTS ix_contacts_company ON public.contacts USING btree (company);
 CREATE INDEX IF NOT EXISTS ix_contacts_email ON public.contacts USING btree (email);

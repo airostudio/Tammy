@@ -22,6 +22,7 @@ from app.schemas.message import MessageCreate
 from app.schemas.task import TaskCreate
 from app.schemas.visitor import VisitorCreate
 from app.services.appointment_service import AppointmentService
+from app.services.chat_session_service import ChatSessionService
 from app.services.contact_service import ContactService
 from app.services.message_service import MessageService
 from app.services.task_service import TaskService
@@ -46,10 +47,38 @@ class TammyAssistant:
         self.conversation_history: List[Dict[str, str]] = []
 
     async def process_message(
-        self, message: str, db: AsyncSession, context: Optional[Dict[str, Any]] = None
+        self,
+        message: str,
+        db: AsyncSession,
+        context: Optional[Dict[str, Any]] = None,
+        session_id: Optional[str] = None,
     ) -> Dict[str, Any]:
-        """Process a user message, take any real action it implies, and reply"""
+        """Process a user message, take any real action it implies, and reply.
+
+        When `session_id` is given and that session is mid-way through an
+        intent that needed more information (e.g. "Schedule a meeting with
+        Mike" with no date yet), this message is treated as supplying the
+        missing piece - merged with the entities already known for that
+        pending intent - rather than parsed as a brand-new, context-free
+        request. That pending state lives in the database (ChatSession),
+        not on this object, since a new TammyAssistant is created per
+        request and a real deployment may run several instances at once.
+        """
         parsed = self.intent_parser.parse(message)
+
+        pending = await ChatSessionService.get_pending(db, session_id) if session_id else None
+        if pending and parsed["intent"] in (None, "unknown", pending["intent"]):
+            parsed = {
+                "intent": pending["intent"],
+                "entities": {**pending["entities"], **parsed["entities"]},
+                "confidence": max(parsed["confidence"], 0.6),
+                "original_message": f'{pending["original_message"]} {message}'.strip(),
+            }
+        elif pending:
+            # The new message is clearly a different, recognized request -
+            # the old pending intent is stale, so drop it rather than let
+            # it resurface later and hijack an unrelated reply.
+            await ChatSessionService.clear(db, session_id)
 
         self.conversation_history.append({"role": "user", "content": message})
 
@@ -65,6 +94,17 @@ class TammyAssistant:
                 "confidence": 0.0,
                 "suggestions": [],
             }
+
+        if session_id:
+            intent = parsed.get("intent")
+            if intent not in (None, "unknown") and not response.get("actions"):
+                # Still missing something - remember where we are so the
+                # next message can pick up where this one left off.
+                await ChatSessionService.set_pending(
+                    db, session_id, intent, parsed["entities"], parsed["original_message"]
+                )
+            else:
+                await ChatSessionService.clear(db, session_id)
 
         self.conversation_history.append({"role": "assistant", "content": response["response"]})
 

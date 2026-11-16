@@ -26,6 +26,10 @@ export function ChatDemo() {
   const [suggestions, setSuggestions] = useState<string[]>(EXAMPLE_QUERIES);
   const [loading, setLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  // One id for this widget's whole lifetime, so a follow-up answer (e.g.
+  // "Tomorrow at 2pm" after Tammy asks for a date) is recognized as
+  // continuing the same request rather than parsed on its own.
+  const sessionIdRef = useRef<string>(crypto.randomUUID());
 
   function scrollToBottom() {
     requestAnimationFrame(() => {
@@ -46,7 +50,7 @@ export function ChatDemo() {
       const response = await fetch(`${API_URL}/api/chat/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: trimmed }),
+        body: JSON.stringify({ message: trimmed, session_id: sessionIdRef.current }),
       });
       if (!response.ok) throw new Error("Request failed");
       const data: ChatResponse = await response.json();

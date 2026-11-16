@@ -42,10 +42,11 @@ the FastAPI backend's `require_admin` check.
 The RLS migration enables RLS on every table and adds a policy allowing
 any **authenticated** Supabase user (i.e. staff who can sign in to the
 app) full access, while the public `anon` role gets none.
-`calendar_connections` (which holds OAuth access/refresh tokens) gets no
-policies at all, so it's reachable only through the FastAPI backend's
-direct database connection, never through the public API - not even for
-authenticated users.
+`calendar_connections` (which holds OAuth access/refresh tokens) and
+`chat_sessions` (internal bookkeeping for the chat endpoint's in-progress
+intents) get no policies at all, so they're reachable only through the
+FastAPI backend's direct database connection, never through the public
+API - not even for authenticated users.
 
 The FastAPI backend itself is unaffected either way: it connects via
 `DATABASE_URL` as the table owner, and RLS never applies to a table's
@@ -53,8 +54,8 @@ owner.
 
 Both files were verified against a real local Postgres instance (with
 roles/grants matching Supabase's defaults) before being added here, run
-in order against a genuinely empty database: all 8 tables come up from
+in order against a genuinely empty database: all 9 tables come up from
 the schema file alone, and after the RLS file the owner role sees
 everything, `anon` sees and can write nothing, and `authenticated` can
 read and write the normal tables but sees nothing in
-`calendar_connections`.
+`calendar_connections` or `chat_sessions`.
